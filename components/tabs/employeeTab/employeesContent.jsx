@@ -1,10 +1,10 @@
 import React from 'react';
+import AddEmployee from './handleEmployees/addEmployee';
 
 const EmployeesContent = () => {
   return (
     <div>
-      <h2>Employees</h2>
-      <p>Details about employees...</p>
+      <AddEmployee/>
     </div>
   );
 };

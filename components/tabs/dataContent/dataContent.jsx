@@ -2,8 +2,7 @@ import React from 'react';
 
 const DataContent = () => {
   return (
-    <div>
-      {/* Content specific to Data */}
+    <div style={{ backgroundColor: 'red'}}>
       <h2>Data</h2>
       <p>Details about data...</p>
     </div>

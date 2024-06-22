@@ -24,7 +24,7 @@ function MeetingMaster() {
         >
             <Card sx={{ backgroundColor: '#ffffff', padding: '7px', height:'auto' }}>
                 <CardContent>
-                    <Tabs value={selectedTab} onChange={handleChange} sx={{ width: 'auto' }}>
+                    <Tabs value={selectedTab} onChange={handleChange} sx={{ width: 'auto' }} >
                         <Tab icon={<GroupsIcon />} label="Meetings" iconPosition='start' />
                         <Tab icon={<BadgeIcon />} label="Employees" iconPosition='start' />
                         <Tab icon={<BackupIcon />} label="Data" iconPosition='start' />

@@ -1,12 +1,16 @@
 import React from 'react';
+import AddMeeting from './addMeting/AddMeeting';
+import MeetingList from './meetingList/MeetingList';
 
 const MeetingsContent = () => {
   return (
     <div>
-      {/* Content specific to Meetings */}
-      <h2>Meetings</h2>
-      <p>Details about meetings...</p>
+     <AddMeeting/>
+     <MeetingList/>
     </div>
+
+        
+    
   );
 };
 
