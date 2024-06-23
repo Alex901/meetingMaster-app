@@ -1,17 +1,54 @@
 import React, { useState } from 'react';
 import ReactModal from 'react-modal';
 import { TextField, Button, MenuItem, FormControl, Select, InputLabel } from '@mui/material';
+import { useEmployeeContext } from '/contexts/EmployeeContext';
+import { useMeetingContext } from '/contexts/MeetingContext';
+
 const MeetingModal = ({ open, handleClose }) => {
+    const [title, setTitle] = useState('');
+    const [location, setLocation] = useState('');
+    const [duration, setDuration] = useState('');
+    const [description, setDescription] = useState('');
     const [earliestDate, setEarliestDate] = useState('');
     const [latestDate, setLatestDate] = useState('');
+    const [selectedEmployees, setSelectedEmployees] = useState([]);
+    const { employeeList } = useEmployeeContext();
 
     const handleEarliestDateChange = (event) => {
-        setEarliestDate(event.target.value);
+        const date = new Date(event.target.value);
+        date.setHours(10, 0); // Set time to 08:00
+        setEarliestDate(date.toISOString().slice(0, 16));
     };
 
     const handleLatestDateChange = (event) => {
-        setLatestDate(event.target.value);
+        const date = new Date(event.target.value);
+        date.setHours(19, 0); // No times after 17.00
+        setLatestDate(date.toISOString().slice(0, 16));
     };
+
+    const handleEmployeeSelection = (event) => {
+        const value = event.target.value;
+        setSelectedEmployees((current) => (current === value ? null : value));
+
+        console.log(selectedEmployees);
+    }
+
+    const handlesSubmit = (event) => {
+
+        const newMeetingData = {
+            title: title,
+            location: location,
+            duration: duration,
+            description: description,
+            earliestDate: new Date(earliestDate),
+            latestDate: new Date(latestDate),
+            selectedEmployees: selectedEmployees
+        }
+
+        console.log(newMeetingData);
+        event.preventDefault();
+        console.log('Submitting Meeting');
+    }
 
 
     const customStyles = {
@@ -36,7 +73,7 @@ const MeetingModal = ({ open, handleClose }) => {
     return (
         <ReactModal isOpen={open} onRequestClose={handleClose} style={customStyles}>
             <h2 id="meeting-modal-title">Set New Meeting</h2>
-            <form>
+            <form onSubmit={handlesSubmit}>
                 <TextField
                     size="small"
                     margin="normal"
@@ -45,6 +82,7 @@ const MeetingModal = ({ open, handleClose }) => {
                     label="Title"
                     name="title"
                     autoFocus
+                    onChange={e => setTitle(e.target.value)}
                 />
                 <div style={{ display: 'flex', gap: '16px', alignItems: 'center', margin: 'normal' }}>
                     <TextField
@@ -54,6 +92,7 @@ const MeetingModal = ({ open, handleClose }) => {
                         label="Location"
                         name="location"
                         style={{ flex: 1 }} // Adjusts the width to take up available space
+                        onChange={e => setLocation(e.target.value)}
                     />
 
                     <TextField
@@ -63,13 +102,14 @@ const MeetingModal = ({ open, handleClose }) => {
                         label="Duration (minutes)"
                         name="duration"
                         type="number"
+                        onChange={e => setDuration(e.target.value)}
                         InputProps={{
                             inputProps: {
-                                min: 0, // Minimum value
-                                step: 15 // Step increment
+                                min: 0,
+                                step: 15
                             }
                         }}
-                        style={{ width: '200px' }} // Adjusts the width specifically for the duration input
+                        style={{ width: '200px' }}
                     />
                 </div>
 
@@ -82,8 +122,28 @@ const MeetingModal = ({ open, handleClose }) => {
                     name="description"
                     multiline
                     rows={2}
+                    onChange={e => setDescription(e.target.value)}
                     inputProps={{ maxLength: 150 }}
                 />
+
+                <FormControl fullWidth margin="dense" size="small">
+                    <InputLabel id="employee-select-label">Select Employees</InputLabel>
+                    <Select
+                        labelId="employee-select-label"
+                        id="employee-select"
+                        label="Select Employees"
+                        size="small"
+                        multiple
+                        value={selectedEmployees}
+                        onChange={handleEmployeeSelection}
+                    >
+                        {employeeList.map((employee) => (
+                            <MenuItem key={employee.id} value={employee}>
+                                {employee.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
 
 
 
@@ -102,6 +162,8 @@ const MeetingModal = ({ open, handleClose }) => {
                         onChange={handleEarliestDateChange}
                         InputLabelProps={{
                             shrink: true,
+                        }}
+                        inputProps={{
                         }}
                     />
                     <TextField
@@ -123,22 +185,10 @@ const MeetingModal = ({ open, handleClose }) => {
                         }}
                     />
                 </div>
-                <FormControl fullWidth margin="dense" size="small">
-                    <InputLabel id="employee-select-label">Select Employees</InputLabel>
-                    <Select
-                        labelId="employee-select-label"
-                        id="employee-select"
-                        label="Select Employees"
-                        size="small"
-                    >
-                        {/* Map employees here */}
-                        <MenuItem value={1}>Employee 1</MenuItem>
-                        <MenuItem value={2}>Employee 2</MenuItem>
 
-                    </Select>
-                </FormControl>
                 <div style={{ textAlign: 'center' }}>
-                    <Button type="submit" variant="contained" color="primary" size="large" style={{ marginTop: '20px' }} disabled>
+                    <Button type="submit" variant="contained" color="primary" size="large" style={{ marginTop: '20px' }}
+                    disabled={!earliestDate.length || !latestDate.length || !selectedEmployees.length || !duration}>
                         Submit
                     </Button>
                 </div>
