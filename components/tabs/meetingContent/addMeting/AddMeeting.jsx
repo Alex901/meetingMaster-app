@@ -5,13 +5,8 @@ import MeetingModal from './MeetingModal/MeetingModal';
 const AddMeeting = () => {
     const [openModal, setOpenModal] = useState(false);
     
-    const handleOpen = () => {
-        setOpenModal(true);
-    }
-
-    const handleClose = () => {
-        setOpenModal(false);
-    }
+    const handleOpen = () => setOpenModal(true); 
+    const handleClose = () => setOpenModal(false); 
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
