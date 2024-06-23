@@ -1,8 +1,8 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const EmployeeContext = createContext();
 
-EmployeeProvider = ({ children }) => {
+const EmployeeProvider = ({ children }) => {
     const [employeeList, setEmployeeList] = useState([]);
 
     const addEmployee = (employee) => {
@@ -23,4 +23,4 @@ EmployeeProvider = ({ children }) => {
 
     const useEmployeeContext = () => useContext(EmployeeContext);
 
-    return { EmployeeProvider, useEmployeeContext };    
+    export { EmployeeProvider, useEmployeeContext };    
