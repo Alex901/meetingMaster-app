@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 
 
 
@@ -40,7 +40,7 @@ const dummyMeetings = [
 ];
 
 const MeetingProvider = ({ children }) => {
-    const [meetingList, setMeetingList] = useState([dummyMeetings]);
+    const [meetingList, setMeetingList] = useState(dummyMeetings);
 
     const addMeeting = (meeting) => {
         setMeetingList([...meetingList, meeting]);
@@ -59,4 +59,6 @@ const MeetingProvider = ({ children }) => {
     );
 }
 
-export { MeetingProvider, MeetingContext };
+const useMeetingContext = () => useContext(MeetingContext);
+
+export { MeetingProvider, useMeetingContext };

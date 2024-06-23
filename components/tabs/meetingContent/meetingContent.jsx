@@ -7,10 +7,7 @@ const MeetingsContent = () => {
     <div>
      <AddMeeting/>
      <MeetingList/>
-    </div>
-
-        
-    
+    </div> 
   );
 };
 
