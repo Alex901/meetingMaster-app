@@ -46,14 +46,33 @@ const MeetingModal = ({ open, handleClose }) => {
                     name="title"
                     autoFocus
                 />
-                <TextField
-                    size="small"
-                    margin="normal"
-                    fullWidth
-                    id="location"
-                    label="Location"
-                    name="location"
-                />
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'center', margin: 'normal' }}>
+    <TextField
+        size="small"
+        fullWidth
+        id="location"
+        label="Location"
+        name="location"
+        style={{ flex: 1 }} // Adjusts the width to take up available space
+    />
+
+    <TextField
+        size="small"
+        required
+        id="duration"
+        label="Duration (minutes)"
+        name="duration"
+        type="number"
+        InputProps={{
+            inputProps: {
+                min: 0, // Minimum value
+                step: 15 // Step increment
+            }
+        }}
+        style={{ width: '200px' }} // Adjusts the width specifically for the duration input
+    />
+</div>
+
                 <TextField
                     size="small"
                     margin="normal"
@@ -66,57 +85,44 @@ const MeetingModal = ({ open, handleClose }) => {
                     inputProps={{ maxLength: 150 }}
                 />
 
-                <TextField
-                    size="small"
-                    margin="normal"
-                    required
-                    id="duration"
-                    label="Duration (minutes)"
-                    name="duration"
-                    type="number"
-                    InputProps={{
-                        inputProps: {
-                            min: 0, // Minimum value
-                            step: 15 // Step increment
-                        }
-                    }}
-                />
+           
 
                 <h3 style={{ marginTop: '20px' }}>Timefinder</h3>
-                <TextField
-                    size="small"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="at-earliest"
-                    label="At Earliest"
-                    name="at-earliest"
-                    type="datetime-local"
-                    value={earliestDate}
-                    onChange={handleEarliestDateChange}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-                <TextField
-                    size="small"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="at-latest"
-                    label="At Latest"
-                    name="at-latest"
-                    type="datetime-local"
-                    value={latestDate}
-                    onChange={handleLatestDateChange}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-
-                    inputProps={{
-                        min: earliestDate, // Prevent selecting a date earlier than the first field
-                    }}
-                />
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+    <TextField
+        size="small"
+        margin="normal"
+        required
+        fullWidth
+        id="at-earliest"
+        label="At Earliest"
+        name="at-earliest"
+        type="datetime-local"
+        value={earliestDate}
+        onChange={handleEarliestDateChange}
+        InputLabelProps={{
+            shrink: true,
+        }}
+    />
+    <TextField
+        size="small"
+        margin="normal"
+        required
+        fullWidth
+        id="at-latest"
+        label="At Latest"
+        name="at-latest"
+        type="datetime-local"
+        value={latestDate}
+        onChange={handleLatestDateChange}
+        InputLabelProps={{
+            shrink: true,
+        }}
+        inputProps={{
+            min: earliestDate, // Prevent selecting a date earlier than the first field
+        }}
+    />
+</div>
                 <FormControl fullWidth margin="dense" size="small">
                     <InputLabel id="employee-select-label">Select Employees</InputLabel>
                     <Select
