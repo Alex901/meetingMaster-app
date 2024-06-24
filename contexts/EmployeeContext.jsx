@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const EmployeeContext = createContext();
 
@@ -32,8 +33,8 @@ const dummyData = [
 const EmployeeProvider = ({ children }) => {
     const [employeeList, setEmployeeList] = useState(dummyData);
 
-    const addEmployee = (employee) => {
-        setEmployeeList([...employeeList, employee]);
+    const addEmployee = (employeeData) => {
+        setEmployeeList([...employeeList, employeeData]);
     }
 
     const deleteEmployee = (employee) => {

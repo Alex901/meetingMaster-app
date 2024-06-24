@@ -1,6 +1,6 @@
 import React from 'react';
 import AddEmployee from './handleEmployees/addEmployee';
-import EmployeeList from './employeeList/EmployeeList';
+import EmployeeList from './EmployeeList/EmployeeList';
 
 const EmployeesContent = () => {
   return (
