@@ -46,14 +46,30 @@ const EmployeeProvider = ({ children }) => {
         }
     };
 
+    //HEHE, could not resist :))
+    const letsGetBusy = async (_id, busyTimes) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/employees/${_id}/set-busy`, {
+                busyTimes,
+            });
+            if (response.status === 200){
+                fetchEmployees();
+            }
 
-        return (
-            <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee }}>
-                {children}
-            </EmployeeContext.Provider>
-        );
+            console.log('Successfully added busy times:', response.data);
+        } catch (error) {
+            console.error('Error adding busy times:', error.response ? error.response.data : error.message);
+        }
     };
 
-    const useEmployeeContext = () => useContext(EmployeeContext);
 
-    export { EmployeeProvider, useEmployeeContext }; 
+    return (
+        <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee, letsGetBusy }}>
+            {children}
+        </EmployeeContext.Provider>
+    );
+};
+
+const useEmployeeContext = () => useContext(EmployeeContext);
+
+export { EmployeeProvider, useEmployeeContext }; 
