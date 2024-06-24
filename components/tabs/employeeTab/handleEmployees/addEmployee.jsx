@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
-import AddEmployeeModal from './AddEmployeeModal/addEmployeeModal';
+import AddEmployeeModal from './addEmployeeModal/addEmployeeModal';
 
 const AddEmployee = () => {
     const [openModal, setOpen] = useState(false); 
