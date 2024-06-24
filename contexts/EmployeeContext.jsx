@@ -3,52 +3,73 @@ import axios from 'axios';
 
 const EmployeeContext = createContext();
 
-const dummyData = [
-    {
-        _id: '1',
-        name: 'John Doe',
-        color: '#FF0000', // Example HEX code
-        busy: [{ start: new Date(2023, 3, 14, 9, 0), end: new Date(2023, 3, 14, 17, 0) }],
-    },
-    {
-        _id: '2',
-        name: 'Jane Smith',
-        color: '#00FF00', // Example HEX code
-        busy: [{ start: new Date(2023, 3, 15, 10, 0), end: new Date(2023, 3, 15, 12, 0) }],
-    },
-    {
-        _id: '3',
-        name: 'Alex Johnson',
-        color: '#0000FF', // Example HEX code
-        busy: [{ start: new Date(2023, 3, 16, 13, 0), end: new Date(2023, 3, 16, 15, 0) }],
-    },
-    {
-        _id: '4',
-        name: 'Emily Davis',
-        color: '#FFFF00', // Example HEX code
-        busy: [{ start: new Date(2023, 3, 17, 11, 0), end: new Date(2023, 3, 17, 14, 0) }],
-    },
-];
-
 const EmployeeProvider = ({ children }) => {
-    const [employeeList, setEmployeeList] = useState(dummyData);
+    const BASE_URL = 'http://localhost:5000';
+    const [employeeList, setEmployeeList] = useState([]);
 
-    const addEmployee = (employeeData) => {
-        setEmployeeList([...employeeList, employeeData]);
+    useEffect(() => {
+        fetchEmployees();
+    }, []);
+
+    const fetchEmployees = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/employees/getEmployees`);
+            setEmployeeList(response.data.employees);
+        } catch (error) {
+            console.error('Failed to fetch employees:', error);
+        }
+    };
+
+    const addEmployee = async (employeeData) => {
+        //console.log('Adding employee:', employeeData);
+        try {
+            const response = await axios.post(`${BASE_URL}/employees/addEmployee`, employeeData);
+
+            console.log(response.data.message);
+
+            setEmployeeList([...employeeList, response.data.newEmployee]);
+        } catch (error) {
+            console.error('Error adding employee:', error.response ? error.response.data.message : error.message);
+        }
     }
 
-    const deleteEmployee = (employee) => {
-        const updatedList = employeeList.filter((item) => item.id !== employee.id);
-        setEmployeeList(updatedList);
-    }
+    const deleteEmployee = async (id_) => {
+        try {
+            const response = await axios.delete(`${BASE_URL}/employees/delete/${id_}`);
+            if (response.status === 200) {
+                // Filter out the deleted employee from the local state
+                const updatedList = employeeList.filter((emp) => emp._id !== id_);
+                setEmployeeList(updatedList);
+            }
+        } catch (error) {
+            console.error('Error deleting employee:', error.response ? error.response.data.message : error.message);
+        }
+    };
+
+    //HEHE, could not resist :))
+    const letsGetBusy = async (_id, busyTimes) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/employees/${_id}/set-busy`, {
+                busyTimes,
+            });
+            if (response.status === 200){
+                fetchEmployees();
+            }
+
+            console.log('Successfully added busy times:', response.data);
+        } catch (error) {
+            console.error('Error adding busy times:', error.response ? error.response.data : error.message);
+        }
+    };
+
 
     return (
-        <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee }}>
+        <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee, letsGetBusy }}>
             {children}
         </EmployeeContext.Provider>
     );
 };
 
-    const useEmployeeContext = () => useContext(EmployeeContext);
+const useEmployeeContext = () => useContext(EmployeeContext);
 
-    export { EmployeeProvider, useEmployeeContext }; 
+export { EmployeeProvider, useEmployeeContext }; 
