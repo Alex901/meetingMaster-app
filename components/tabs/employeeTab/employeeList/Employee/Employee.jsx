@@ -11,9 +11,9 @@ const Employee = ({ _id, name, color, busy }) => {
     const [isHovering, setIsHovering] = useState(false);
     const { deleteEmployee } = useEmployeeContext();
 
-    const deleteEmp = (employeeName) => {
-        console.log('Deleting employee:', employeeName);
-        deleteEmployee(employeeName);
+    const deleteEmp = (_id) => {
+        console.log('Deleting employee:', _id);
+        deleteEmployee(_id);
     };
 
     return (
@@ -32,7 +32,7 @@ const Employee = ({ _id, name, color, busy }) => {
                     aria-label="delete"
                     onMouseEnter={() => setIsHovering(true)}
                     onMouseLeave={() => setIsHovering(false)}
-                    onClick={() => deleteEmp(name)} 
+                    onClick={() => deleteEmp(_id)} 
                 >
                     {isHovering ? <DeleteForeverIcon /> : <DeleteIcon />}
                 </IconButton>
