@@ -38,19 +38,36 @@ const EmployeeProvider = ({ children }) => {
         //console.log('Adding employee:', employeeData);
         try {
             const response = await axios.post(`${BASE_URL}/employees/addEmployee`, employeeData);
-    
-            console.log(response.data.message); 
-    
+
+            console.log(response.data.message);
+
             setEmployeeList([...employeeList, response.data.newEmployee]);
         } catch (error) {
             console.error('Error adding employee:', error.response ? error.response.data.message : error.message);
         }
     }
 
-    const deleteEmployee = (employee) => {
-        const updatedList = employeeList.filter((item) => item.id !== employee.id);
-        setEmployeeList(updatedList);
-    }
+    const deleteEmployee = async (employeeName) => {
+        try {
+            // Find the employee by name to get their ID
+            const employee = employeeList.find((emp) => emp.name === employeeName);
+            if (!employee) {
+                console.error('Employee not found');
+                return;
+            }
+    
+            const response = await axios.delete(`${BASE_URL}/employees/delete/${employee._id}`);
+            if (response.status === 200) {
+                // Filter out the deleted employee from the local state
+                const updatedList = employeeList.filter((emp) => emp._id !== employee._id);
+                setEmployeeList(updatedList); 
+            }
+        } catch (error) {
+            console.error('Error deleting employee:', error.response ? error.response.data.message : error.message);
+        }
+    };
+
+
 
     return (
         <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee }}>
@@ -59,6 +76,6 @@ const EmployeeProvider = ({ children }) => {
     );
 };
 
-    const useEmployeeContext = () => useContext(EmployeeContext);
+const useEmployeeContext = () => useContext(EmployeeContext);
 
-    export { EmployeeProvider, useEmployeeContext }; 
+export { EmployeeProvider, useEmployeeContext }; 
