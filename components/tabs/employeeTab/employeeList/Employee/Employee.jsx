@@ -5,6 +5,8 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import { useEmployeeContext } from '/contexts/EmployeeContext';
 
 const Employee = ({ _id, name, color, busy }) => {
@@ -20,18 +22,17 @@ const Employee = ({ _id, name, color, busy }) => {
         deleteEmployee(_id);
     };
 
-    {/* This is a block comment in JSX */ }
+    {/* Method to generate some random times where said employee is 
+         busy*/ }
     const addBusyTime = (_id) => {
         const busyTimes = [];
-        // Define the start and end hours of the business day
         const businessStartHour = 9;
         const businessEndHour = 17;
-        // Maximum duration of a busy block is 2 hours
         const maxDurationHours = 2;
         let attemptCounter = 0;
         const maxAttempts = 100;
 
-        // Define a helper function to generate a random time block within business hours
+        // A helper function to generate a random time block within business hours
         const generateTimeBlock = (date) => {
             // Calculate a random start hour within the constraints that allow for a max 2-hour duration
             const startHour = Math.floor(Math.random() * (businessEndHour - maxDurationHours - businessStartHour + 1)) + businessStartHour;
@@ -51,7 +52,7 @@ const Employee = ({ _id, name, color, busy }) => {
             // Adjust the date to the correct day based on the loop's offset
             date.setDate(date.getDate() + dayOffset);
             // Randomly determine the number of busy blocks for the day (between 1 and 6)
-            const numBlocksToday = Math.floor(Math.random() * 6) + 1;
+            const numBlocksToday = Math.floor(Math.random() * 4) + 1;
 
             // Initialize an array to hold the day's busy blocks
             let dayBlocks = [];
@@ -73,7 +74,7 @@ const Employee = ({ _id, name, color, busy }) => {
                     attemptCounter++;
                     if (attemptCounter > maxAttempts) {
                         console.log("Max attempts reached, skipping to next block to avoid infinite loop.");
-                        break; // Exit the loop if max attempts are reached
+                        break;
                     }
                 } while (overlap); // Continue until a non-overlapping block is generated
                 // Add the non-overlapping block to the day's blocks
@@ -83,39 +84,76 @@ const Employee = ({ _id, name, color, busy }) => {
             busyTimes.push(...dayBlocks);
         }
 
-        // Log the generated busy times for the employee
-        // In a real application, you would likely update the employee's record in a database or state
         console.log(`Generated busy times for employee ${_id}:`, busyTimes);
-        if(busyTimes.length > 0) {
+        if (busyTimes.length > 0) {
             letsGetBusy(_id, busyTimes);
         }
     };
 
+    const getTodaysBusyTimes = () => {
+        const today = new Date();
+        const todayDate = today.toLocaleDateString();
+
+        // First loop: Filter out dates that match today's date
+        const todaysEvents = busy.filter(({ start }) => {
+            const localStartDate = new Date(start).toLocaleDateString();
+            return localStartDate === todayDate;
+        }).sort((a, b) => {
+            // Sort the events by start time
+            return new Date(a.start) - new Date(b.start);
+        });
+
+        // Second loop: Format the start and end times of today's events
+        const formattedBusyTimes = todaysEvents.map(({ start, end }) => {
+            const startTime = new Date(start).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            const endTime = new Date(end).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+            return `${startTime} - ${endTime}`;
+        });
+
+        return formattedBusyTimes;
+    };
+
+    const todaysBusyTimes = getTodaysBusyTimes();
+
+
+
+
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '5px', margin: '5px', border: '1px, solid, black', borderRadius: '10px' }}>
-            <Avatar style={{ backgroundColor: color }}>{getInitials(name)}</Avatar>
-            <div style={{ flexGrow: 1 }}>
-                <TextField
-                    variant="outlined"
-                    defaultValue={name}
-                    size="small"
-                    style={{}}
-                />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-evenly' }}>
+                <Avatar style={{ backgroundColor: color }}>{getInitials(name)}</Avatar>
+                <div style={{ flexGrow: 1 }}>
+                    <TextField
+                        variant="outlined"
+                        defaultValue={name}
+                        size="small"
+                    />
+                </div>
+                <div>
+                    <IconButton
+                        aria-label="delete"
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                        onClick={() => deleteEmp(_id)}
+                    >
+                        {isHovering ? <DeleteForeverIcon /> : <DeleteIcon />}
+                    </IconButton>
+                    <IconButton aria-label="add"
+                        onClick={() => addBusyTime(_id)}
+                    >
+                        <AddIcon />
+                    </IconButton>
+                </div>
             </div>
-            <div>
-                <IconButton
-                    aria-label="delete"
-                    onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={() => setIsHovering(false)}
-                    onClick={() => deleteEmp(_id)}
-                >
-                    {isHovering ? <DeleteForeverIcon /> : <DeleteIcon />}
-                </IconButton>
-                <IconButton aria-label="add"
-                    onClick={() => addBusyTime(_id)}
-                >
-                    <AddIcon />
-                </IconButton>
+            <div style={{ width: '100%' }}>
+                <Stack direction="row" spacing={1} justifyContent="flex-start">
+                    <div style={{ textAlign: 'left' }}>
+                        <Chip label="BUSY TODAY" color="primary" />
+                    </div>
+                    {todaysBusyTimes.map((time, index) => (
+                        <Chip key={index} label={time} />
+                    ))}
+                </Stack>
             </div>
         </div>
     );
