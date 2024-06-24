@@ -31,10 +31,20 @@ const dummyData = [
 ];
 
 const EmployeeProvider = ({ children }) => {
+    const BASE_URL = 'http://localhost:5000';
     const [employeeList, setEmployeeList] = useState(dummyData);
 
-    const addEmployee = (employeeData) => {
-        setEmployeeList([...employeeList, employeeData]);
+    const addEmployee = async (employeeData) => {
+        //console.log('Adding employee:', employeeData);
+        try {
+            const response = await axios.post(`${BASE_URL}/employees/addEmployee`, employeeData);
+    
+            console.log(response.data.message); 
+    
+            setEmployeeList([...employeeList, response.data.newEmployee]);
+        } catch (error) {
+            console.error('Error adding employee:', error.response ? error.response.data.message : error.message);
+        }
     }
 
     const deleteEmployee = (employee) => {

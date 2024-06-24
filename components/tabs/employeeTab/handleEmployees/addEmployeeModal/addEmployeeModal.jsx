@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import ReactModal from 'react-modal';
+import { useEmployeeContext } from '/contexts/EmployeeContext';
+
 
 const AddEmployeeModal = ({ open, handleClose }) => {
     const [employeeName, setEmployeeName] = useState('');
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+    const { addEmployee } = useEmployeeContext();
 
     const handleChange = (event) => {
         const newName = event.target.value;
@@ -15,7 +18,9 @@ const AddEmployeeModal = ({ open, handleClose }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('Submitting Name:', employeeName);
+        const userData = { name: employeeName, busy: [] };
+        addEmployee(userData);
+        setEmployeeName('');
         handleClose();
     };
 
