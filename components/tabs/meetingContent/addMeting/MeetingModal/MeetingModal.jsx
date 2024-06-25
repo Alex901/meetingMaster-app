@@ -28,7 +28,7 @@ const MeetingModal = ({ open, handleClose }) => {
     message: "Enter the meeting details for recommended start times",
   });
 
-  useEffect(() => {
+  useEffect(() => { 
     if (
       earliestDate.length &&
       latestDate.length &&
