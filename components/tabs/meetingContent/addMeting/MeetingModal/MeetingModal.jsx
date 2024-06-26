@@ -29,6 +29,13 @@ const MeetingModal = ({ open, handleClose }) => {
   });
 
   useEffect(() => {
+    console.log("Selected time:", selectedTime);
+    console.log("timeRecommendations", timeRecommendations);
+  }, [selectedTime]);
+
+  const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  useEffect(() => {
     if (
       earliestDate.length &&
       latestDate.length &&
@@ -36,7 +43,37 @@ const MeetingModal = ({ open, handleClose }) => {
       duration
     ) {
       const calculateTimeRecommendations = () => {
-        return ["12.00", "14.45", "15.30", "16.15", "16.30"];
+        const startTime = new Date(earliestDate); // Ensure this is local time
+        const endTime = new Date(latestDate); // Ensure this is local time
+        const durationMinutes = parseInt(duration, 10);
+        let recommendations = [];
+
+        // Generate all possible start times within the range, at 0, 15, 30, 45 of each hour
+        for (let time = new Date(startTime); time <= endTime; time.setMinutes(time.getMinutes() + 15)) {
+          console.log("time: ", time);
+          const endOfMeeting = new Date(time);
+          endOfMeeting.setMinutes(endOfMeeting.getMinutes() + durationMinutes);
+          console.log("end of meeting", endOfMeeting);
+
+          const withinWorkingHours = time.getHours() >= 9 && endOfMeeting.getHours() < 17 || (endOfMeeting.getHours() === 17 && endOfMeeting.getMinutes() === 0);
+
+          // Check if the time slot is within the date range and working hours
+          if (withinWorkingHours && endOfMeeting <= endTime && selectedEmployees.every(employee => {
+            return employee.busy.every(busyTime => {
+              const employeeStart = new Date(busyTime.start); // Ensure this is local time
+              const employeeEnd = new Date(busyTime.end); // Ensure this is local time
+              console.log("employeeStart", employeeStart);
+              // It is a valid time if no employee is busy during that time, else
+              return !(time < employeeEnd && endOfMeeting > employeeStart);
+            });
+          })) {
+            recommendations.push(new Date(time)); // Clone the date to avoid mutation
+            console.log("recommendations", recommendations);
+          }
+        }
+
+        // Convert Date objects to time strings for display, but keep Date objects for internal use
+        return recommendations;
       };
 
       const recommendations = calculateTimeRecommendations();
@@ -108,6 +145,12 @@ const MeetingModal = ({ open, handleClose }) => {
       backgroundColor: "rgba(255, 255, 255, 0.2)",
       backdropFilter: "blur(7px)",
     },
+  };
+
+  const handleTimeSelect = (time) => {
+    setSelectedTime(time);
+
+    console.log('Selected date:', time);
   };
 
   return (
@@ -209,7 +252,7 @@ const MeetingModal = ({ open, handleClose }) => {
               shrink: true,
             }}
             inputProps={{
-              min: new Date().toISOString().slice(0, 16) // Sets the min date and time to the current date and time
+              min: new Date().toISOString().slice(0, 16) // Inactivates all dates before the current date
             }}
           />
           <TextField
@@ -227,19 +270,19 @@ const MeetingModal = ({ open, handleClose }) => {
               shrink: true,
             }}
             inputProps={{
-              min: earliestDate, // Prevent selecting a date earlier than the first field
+              min: earliestDate, // Prevent selecting a date earlier than the first
             }}
           />
         </div>
-        <div style={{ marginTop: '12px' }}>
+        <div style={{ marginTop: '12px', overflow: 'auto' }}>
           {timeRecommendations.message && <p>{timeRecommendations.message}</p>}
           {(timeRecommendations.recommendations?.length ?? 0) > 0 && (
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={1} >
               {timeRecommendations.recommendations.map((time, index) => (
                 <Chip
                   key={index}
-                  label={time}
-                  onClick={() => setSelectedTime(time)}
+                  label={formatTime(time)}
+                  onClick={() => handleTimeSelect(time)}
                   color={selectedTime === time ? "primary" : "default"}
                   clickable
                 />
