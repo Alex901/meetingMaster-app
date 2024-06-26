@@ -1,24 +1,23 @@
-import React, { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
+import React, { useState, useEffect } from 'react';
+import { Avatar, TextField, IconButton, Chip, Stack, Button } from '@mui/material';
+import { Delete as DeleteIcon, Add as AddIcon, DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
 import { useEmployeeContext } from '/contexts/EmployeeContext';
 
 const Employee = ({ _id, name, color, busy }) => {
     const [isHovering, setIsHovering] = useState(false);
     const { deleteEmployee, letsGetBusy } = useEmployeeContext();
+    const [currentName, setCurrentName] = useState(name);
+
+    useEffect(() => {
+        setCurrentName(name);
+    }, [name]);
 
     const getInitials = (name) => {
         return name.split(' ').map((n) => n[0]).join('');
     };
 
     const deleteEmp = (_id) => {
-        console.log('Deleting employee:', _id);
+        console.log('Deleting employee:', _id, name);
         deleteEmployee(_id);
     };
 
@@ -113,21 +112,44 @@ const Employee = ({ _id, name, color, busy }) => {
         return formattedBusyTimes;
     };
 
+    const handleNameChange = (event) => {
+        setCurrentName(event.target.value);
+      };
+
+    const onNameChange = () => {
+        console.log('Name changed');
+    }
+
+
+
     const todaysBusyTimes = getTodaysBusyTimes();
 
-
-
-
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-evenly' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: 'white' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: 'auto', justifyContent: 'space-evenly' }}>
                 <Avatar style={{ backgroundColor: color }}>{getInitials(name)}</Avatar>
                 <div style={{ flexGrow: 1 }}>
                     <TextField
                         variant="outlined"
-                        defaultValue={name}
+                        defaultValue={currentName}
                         size="small"
+                        onChange={handleNameChange}
                     />
+                    <Button
+                        variant="contained"
+                        size="small"
+                        onClick={onNameChange}
+                        disabled={currentName === name || currentName === ''}
+                        sx={{
+                            minWidth: '40px', // Overrides the minimum width to make the button square
+                            height: '40px', // Sets the button height to match the TextField
+                            width: '40px', // Makes the button square
+                            ml: .2, 
+                            borderRadius: '20%', 
+                        }}
+                    >
+                        OK
+                    </Button>
                 </div>
                 <div>
                     <IconButton
@@ -145,13 +167,13 @@ const Employee = ({ _id, name, color, busy }) => {
                     </IconButton>
                 </div>
             </div>
-            <div style={{ width: '100%' }}>
-                <Stack direction="row" spacing={1} justifyContent="flex-start">
-                    <div style={{ textAlign: 'left' }}>
-                        <Chip label="BUSY TODAY" color="primary" />
-                    </div>
+            <div style={{ width: '100%' }}> {/* Added marginTop here */}
+                <Stack direction="row" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: '5px 5px' }}>
+                    <Chip label="BUSY TODAY" color="primary" sx={{ minWidth: '100px' }} />
                     {todaysBusyTimes.map((time, index) => (
-                        <Chip key={index} label={time} />
+                        <div key={index} style={{ width: 'calc(25%)' }}>
+                            <Chip label={time} sx={{ minWidth: '110px' }} />
+                        </div>
                     ))}
                 </Stack>
             </div>

@@ -9,7 +9,7 @@ const EmployeeProvider = ({ children }) => {
 
     useEffect(() => {
         fetchEmployees();
-    }, []);
+    }, [employeeList]);
 
     const fetchEmployees = async () => {
         try {
@@ -34,6 +34,7 @@ const EmployeeProvider = ({ children }) => {
     }
 
     const deleteEmployee = async (id_) => {
+        console.log('Deleting employee:', id_);
         try {
             const response = await axios.delete(`${BASE_URL}/employees/delete/${id_}`);
             if (response.status === 200) {

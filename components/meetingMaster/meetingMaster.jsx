@@ -19,9 +19,10 @@ function MeetingMaster() {
             display="flex"
             justifyContent="center"
             alignItems="top"
-            position="absolute" // or use "fixed" if you want it to stay at the top when scrolling
+            position="fixed" 
             top="50px" 
             height="auto"
+            maxHeight={window.innerHeight - 100}
             width="100vw"
         >
             <Card sx={{ backgroundColor: '#ffffff', padding: '7px', height: 'auto' }}>
