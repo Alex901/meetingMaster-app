@@ -29,13 +29,6 @@ const MeetingModal = ({ open, handleClose }) => {
   });
 
   useEffect(() => {
-    console.log("Selected time:", selectedTime);
-    console.log("timeRecommendations", timeRecommendations);
-  }, [selectedTime]);
-
-  const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-  useEffect(() => {
     if (
       earliestDate.length &&
       latestDate.length &&
@@ -43,17 +36,15 @@ const MeetingModal = ({ open, handleClose }) => {
       duration
     ) {
       const calculateTimeRecommendations = () => {
-        const startTime = new Date(earliestDate); // Ensure this is local time
-        const endTime = new Date(latestDate); // Ensure this is local time
+        const startTime = new Date(earliestDate);
+        const endTime = new Date(latestDate);
         const durationMinutes = parseInt(duration, 10);
         let recommendations = [];
 
         // Generate all possible start times within the range, at 0, 15, 30, 45 of each hour
         for (let time = new Date(startTime); time <= endTime; time.setMinutes(time.getMinutes() + 15)) {
-          console.log("time: ", time);
           const endOfMeeting = new Date(time);
           endOfMeeting.setMinutes(endOfMeeting.getMinutes() + durationMinutes);
-          console.log("end of meeting", endOfMeeting);
 
           const withinWorkingHours = time.getHours() >= 9 && endOfMeeting.getHours() < 17 || (endOfMeeting.getHours() === 17 && endOfMeeting.getMinutes() === 0);
 
@@ -62,13 +53,11 @@ const MeetingModal = ({ open, handleClose }) => {
             return employee.busy.every(busyTime => {
               const employeeStart = new Date(busyTime.start); // Ensure this is local time
               const employeeEnd = new Date(busyTime.end); // Ensure this is local time
-              console.log("employeeStart", employeeStart);
               // It is a valid time if no employee is busy during that time, else
               return !(time < employeeEnd && endOfMeeting > employeeStart);
             });
           })) {
             recommendations.push(new Date(time)); // Clone the date to avoid mutation
-            console.log("recommendations", recommendations);
           }
         }
 
@@ -152,6 +141,43 @@ const MeetingModal = ({ open, handleClose }) => {
 
     console.log('Selected date:', time);
   };
+
+  const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+  const formatDayLabel = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize today to start of the day
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return 'Tomorrow';
+    } else {
+      return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    }
+  };
+
+  const groupByDay = (recommendations) => {
+    return recommendations.reduce((groups, time) => {
+      const dateStr = time.toDateString();
+      if (!groups[dateStr]) {
+        groups[dateStr] = [];
+      }
+      groups[dateStr].push(time);
+      return groups;
+    }, {});
+  };
+
+  const groupedRecommendations = groupByDay(timeRecommendations.recommendations || []);
+
+  const validEarliestDate = new Date(earliestDate).getTime() ? new Date(earliestDate) : new Date();
+
+  const maxDate = new Date(validEarliestDate.getTime() + (5 * 24 * 60 * 60 * 1000)).toISOString().slice(0, 16);
+
+
 
   return (
     <ReactModal isOpen={open} onRequestClose={handleClose} style={customStyles}>
@@ -246,7 +272,7 @@ const MeetingModal = ({ open, handleClose }) => {
             label="At Earliest"
             name="at-earliest"
             type="datetime-local"
-            value={earliestDate}
+            value={earliestDate ? earliestDate : new Date().toISOString().slice(0, 10)}
             onChange={handleEarliestDateChange}
             InputLabelProps={{
               shrink: true,
@@ -270,25 +296,31 @@ const MeetingModal = ({ open, handleClose }) => {
               shrink: true,
             }}
             inputProps={{
-              min: earliestDate, // Prevent selecting a date earlier than the first
+              min: earliestDate, // Prevent selecting a date earlier than the first date
+              max: maxDate,
             }}
           />
         </div>
-        <div style={{ marginTop: '12px', overflow: 'auto' }}>
+        <div style={{ marginTop: '12px', padding: '7px', overflow: 'auto' }}>
           {timeRecommendations.message && <p>{timeRecommendations.message}</p>}
-          {(timeRecommendations.recommendations?.length ?? 0) > 0 && (
-            <Stack direction="row" spacing={1} >
-              {timeRecommendations.recommendations.map((time, index) => (
-                <Chip
-                  key={index}
-                  label={formatTime(time)}
-                  onClick={() => handleTimeSelect(time)}
-                  color={selectedTime === time ? "primary" : "default"}
-                  clickable
-                />
-              ))}
-            </Stack>
-          )}
+          {Object.entries(groupedRecommendations).map(([day, times], index) => (
+            <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
+                {formatDayLabel(new Date(day))}
+              </span>
+              <Stack direction="row" spacing={1}>
+                {times.map((time, timeIndex) => (
+                  <Chip
+                    key={timeIndex}
+                    label={formatTime(time)}
+                    onClick={() => handleTimeSelect(time)}
+                    color={selectedTime === time ? "primary" : "default"}
+                    clickable
+                  />
+                ))}
+              </Stack>
+            </div>
+          ))}
         </div>
 
         <div style={{ textAlign: "center" }}>
