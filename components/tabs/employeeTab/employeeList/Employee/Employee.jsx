@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, TextField, IconButton, Chip, Stack, Button } from '@mui/material';
-import { Delete as DeleteIcon, Add as AddIcon, DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Clear';
 import { useEmployeeContext } from '/contexts/EmployeeContext';
+import { Icon } from '@mdi/react';
+import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 
 const Employee = ({ _id, name, color, busy }) => {
     const [isHovering, setIsHovering] = useState(false);
@@ -114,7 +116,7 @@ const Employee = ({ _id, name, color, busy }) => {
 
     const handleNameChange = (event) => {
         setCurrentName(event.target.value);
-      };
+    };
 
     const onNameChange = () => {
         console.log('Name changed');
@@ -144,8 +146,8 @@ const Employee = ({ _id, name, color, busy }) => {
                             minWidth: '40px', // Overrides the minimum width to make the button square
                             height: '40px', // Sets the button height to match the TextField
                             width: '40px', // Makes the button square
-                            ml: .2, 
-                            borderRadius: '20%', 
+                            ml: .2,
+                            borderRadius: '20%',
                         }}
                     >
                         OK
@@ -157,8 +159,9 @@ const Employee = ({ _id, name, color, busy }) => {
                         onMouseEnter={() => setIsHovering(true)}
                         onMouseLeave={() => setIsHovering(false)}
                         onClick={() => deleteEmp(_id)}
+
                     >
-                        {isHovering ? <DeleteForeverIcon /> : <DeleteIcon />}
+                        <Icon path={isHovering ? mdiDeleteEmpty : mdiDelete} size={1} />
                     </IconButton>
                     <IconButton aria-label="add"
                         onClick={() => addBusyTime(_id)}
