@@ -23,6 +23,7 @@ const MeetingModal = ({ open, handleClose }) => {
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const { employeeList } = useEmployeeContext();
   const [selectedTime, setSelectedTime] = useState("");
+  const { addMeeting } = useMeetingContext();
   const [timeRecommendations, setTimeRecommendations] = useState({
     recommendations: [],
     message: "Enter the meeting details for recommended start times",
@@ -102,19 +103,22 @@ const MeetingModal = ({ open, handleClose }) => {
   };
 
   const handlesSubmit = (event) => {
+    event.preventDefault();
+
     const newMeetingData = {
       title: title,
-      location: location,
-      duration: duration,
       description: description,
-      earliestDate: new Date(earliestDate),
-      latestDate: new Date(latestDate),
-      selectedEmployees: selectedEmployees,
+      startTime: selectedTime,
+      duration: duration,
+      location: location,
+      attendants: selectedEmployees,
     };
 
     console.log(newMeetingData);
-    event.preventDefault();
-    console.log("Submitting Meeting");
+
+    addMeeting(newMeetingData);
+    //TODO: Close modal and cleanup
+
   };
 
   const customStyles = {
@@ -138,7 +142,6 @@ const MeetingModal = ({ open, handleClose }) => {
 
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
-
     console.log('Selected date:', time);
   };
 
@@ -305,20 +308,24 @@ const MeetingModal = ({ open, handleClose }) => {
           {timeRecommendations.message && <p>{timeRecommendations.message}</p>}
           {Object.entries(groupedRecommendations).map(([day, times], index) => (
             <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
-                {formatDayLabel(new Date(day))}
-              </span>
-              <Stack direction="row" spacing={1}>
-                {times.map((time, timeIndex) => (
-                  <Chip
-                    key={timeIndex}
-                    label={formatTime(time)}
-                    onClick={() => handleTimeSelect(time)}
-                    color={selectedTime === time ? "primary" : "default"}
-                    clickable
-                  />
-                ))}
-              </Stack>
+              <div style={{ flexBasis: '90px', flexGrow: 0, flexShrink: 0 }}>
+                <span style={{ fontWeight: 'bold', marginRight: '8px', whiteSpace: 'nowrap' }}>
+                  {formatDayLabel(new Date(day))}
+                </span>
+              </div>
+              <div style={{ flexGrow: 1 }}> 
+                <Stack direction="row" spacing={1}>
+                  {times.map((time, timeIndex) => (
+                    <Chip
+                      key={timeIndex}
+                      label={formatTime(time)}
+                      onClick={() => handleTimeSelect(time)}
+                      color={selectedTime === time ? "primary" : "default"}
+                      clickable
+                    />
+                  ))}
+                </Stack>
+              </div>
             </div>
           ))}
         </div>
