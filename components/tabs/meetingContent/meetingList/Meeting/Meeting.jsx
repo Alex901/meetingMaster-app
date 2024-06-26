@@ -9,6 +9,12 @@ const Meeting = ({ meeting }) => {
         return name.split(' ').map((n) => n[0]).join('');
     };
 
+    function formatDuration(duration) {
+        const hours = Math.floor(duration / 60);
+        const minutes = duration % 60;
+        return `${hours} hour(s) and ${minutes} minute(s)`;
+    }
+
     return (
         <Card sx={{ marginBottom: 2 }}>
             <CardContent>
@@ -16,7 +22,14 @@ const Meeting = ({ meeting }) => {
                     {meeting.title}
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {meeting.startTime.toString()} | {meeting.duration}
+                    {meeting.startTime.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                    })} | {formatDuration(meeting.duration)}
                 </Typography>
                 <Typography variant="body2">
                     {meeting.description}
@@ -29,7 +42,8 @@ const Meeting = ({ meeting }) => {
                         console.log("DEBUG: Meeting -> attendant ", attendant),
                         <Chip
                             key={index}
-                            avatar={<Avatar>{getInitials(attendant.name)}</Avatar>}
+                            avatar={<Avatar style={{ backgroundColor: attendant.color }}>
+                                {getInitials(attendant.name)}</Avatar>}
                             label={attendant.name}
                         />
                     ))}
