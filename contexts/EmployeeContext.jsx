@@ -9,7 +9,7 @@ const EmployeeProvider = ({ children }) => {
 
     useEffect(() => {
         fetchEmployees();
-    }, [employeeList]);
+    }, []);
 
     const fetchEmployees = async () => {
         try {
@@ -41,6 +41,7 @@ const EmployeeProvider = ({ children }) => {
                 // Filter out the deleted employee from the local state
                 const updatedList = employeeList.filter((emp) => emp._id !== id_);
                 setEmployeeList(updatedList);
+                fetchEmployees();
             }
         } catch (error) {
             console.error('Error deleting employee:', error.response ? error.response.data.message : error.message);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, TextField, IconButton, Chip, Stack, Button } from '@mui/material';
-import AddIcon from '@mui/icons-material/Clear';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 import { useEmployeeContext } from '/contexts/EmployeeContext';
 import { Icon } from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
@@ -166,7 +166,7 @@ const Employee = ({ _id, name, color, busy }) => {
                     <IconButton aria-label="add"
                         onClick={() => addBusyTime(_id)}
                     >
-                        <AddIcon />
+                        <EventBusyIcon />
                     </IconButton>
                 </div>
             </div>

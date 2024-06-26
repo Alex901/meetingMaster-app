@@ -28,7 +28,7 @@ const MeetingModal = ({ open, handleClose }) => {
     message: "Enter the meeting details for recommended start times",
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     if (
       earliestDate.length &&
       latestDate.length &&
@@ -68,6 +68,7 @@ const MeetingModal = ({ open, handleClose }) => {
   };
 
   const handleEmployeeSelection = (event) => {
+    console.log(event.target.value);
     const value = event.target.value;
     setSelectedEmployees((current) => (current === value ? null : value));
 
@@ -207,7 +208,9 @@ const MeetingModal = ({ open, handleClose }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            inputProps={{}}
+            inputProps={{
+              min: new Date().toISOString().slice(0, 16) // Sets the min date and time to the current date and time
+            }}
           />
           <TextField
             size="small"
@@ -232,16 +235,16 @@ const MeetingModal = ({ open, handleClose }) => {
           {timeRecommendations.message && <p>{timeRecommendations.message}</p>}
           {(timeRecommendations.recommendations?.length ?? 0) > 0 && (
             <Stack direction="row" spacing={1}>
-            {timeRecommendations.recommendations.map((time, index) => (
-              <Chip
-                key={index}
-                label={time}
-                onClick={() => setSelectedTime(time)}
-                color={selectedTime === time ? "primary" : "default"}
-                clickable
-              />
-            ))}
-          </Stack>
+              {timeRecommendations.recommendations.map((time, index) => (
+                <Chip
+                  key={index}
+                  label={time}
+                  onClick={() => setSelectedTime(time)}
+                  color={selectedTime === time ? "primary" : "default"}
+                  clickable
+                />
+              ))}
+            </Stack>
           )}
         </div>
 
