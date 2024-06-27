@@ -52,8 +52,8 @@ const MeetingModal = ({ open, handleClose }) => {
           // Check if the time slot is within the date range and working hours
           if (withinWorkingHours && endOfMeeting <= endTime && selectedEmployees.every(employee => {
             return employee.busy.every(busyTime => {
-              const employeeStart = new Date(busyTime.start); // Ensure this is local time
-              const employeeEnd = new Date(busyTime.end); // Ensure this is local time
+              const employeeStart = new Date(busyTime.start); 
+              const employeeEnd = new Date(busyTime.end); 
               // It is a valid time if no employee is busy during that time, else
               return !(time < employeeEnd && endOfMeeting > employeeStart);
             });
@@ -61,8 +61,6 @@ const MeetingModal = ({ open, handleClose }) => {
             recommendations.push(new Date(time)); // Clone the date to avoid mutation
           }
         }
-
-        // Convert Date objects to time strings for display, but keep Date objects for internal use
         return recommendations;
       };
 
@@ -117,8 +115,8 @@ const MeetingModal = ({ open, handleClose }) => {
     console.log(newMeetingData);
 
     addMeeting(newMeetingData);
-    //TODO: Close modal and cleanup
-
+    resetMeetingData();
+    handleClose();
   };
 
   const customStyles = {
@@ -172,6 +170,15 @@ const MeetingModal = ({ open, handleClose }) => {
       groups[dateStr].push(time);
       return groups;
     }, {});
+  };
+
+  const resetMeetingData = () => {
+    setTitle('');
+    setDescription('');
+    setSelectedTime(null);
+    setDuration('');
+    setLocation('');
+    setSelectedEmployees([]);
   };
 
   const groupedRecommendations = groupByDay(timeRecommendations.recommendations || []);

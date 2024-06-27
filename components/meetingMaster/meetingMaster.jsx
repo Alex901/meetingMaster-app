@@ -24,11 +24,11 @@ function MeetingMaster() {
             height="auto"
             maxHeight={window.innerHeight - 100}
             width="100vw"
-            maxWidth={window.innerWidth}
+           
         >
             <Card sx={{ backgroundColor: '#ffffff', padding: '7px', height: 'auto' }}>
                 <CardContent>
-                    <Tabs
+                    <Tabs centered
                         value={selectedTab}
                         onChange={handleChange}
                         sx={{
