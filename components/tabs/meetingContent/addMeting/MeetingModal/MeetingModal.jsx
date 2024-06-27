@@ -264,7 +264,7 @@ const MeetingModal = ({ open, handleClose }) => {
             onChange={handleEmployeeSelection}
           >
             {employeeList.map((employee) => (
-              <MenuItem key={employee.id} value={employee}>
+              <MenuItem key={employee._id} value={employee}>
                 {employee.name}
               </MenuItem>
             ))}
