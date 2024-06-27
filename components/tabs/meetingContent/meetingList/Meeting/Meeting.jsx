@@ -1,9 +1,13 @@
-import React from 'react';
-import { Card, CardContent, Typography, Chip, Avatar, Stack } from '@mui/material';
+import React, { useState } from 'react';
+import { useMeetingContext } from "/contexts/MeetingContext";
+import { Card, CardContent, Typography, Chip, Avatar, IconButton } from '@mui/material';
+import { Icon } from '@mdi/react';
+import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 
 const Meeting = ({ meeting }) => {
+    const [isHovering, setIsHovering] = useState(false);
+    const { deleteMeeting } = useMeetingContext();
 
-    console.log("DEBUG: meeting in meeting: ", meeting);
     // Function to extract initials from a name
     const getInitials = (name) => {
         return name.split(' ').map((n) => n[0]).join('');
@@ -15,11 +19,23 @@ const Meeting = ({ meeting }) => {
         return `${hours} hour(s) and ${minutes} minute(s)`;
     }
 
+    const deleteEmp = (_id) => {
+        deleteMeeting(_id);
+    }
+
     return (
-        <Card sx={{ marginBottom: 2 }}>
+        <Card sx={{ marginBottom: 2, maxWidth: '600px' }}>
             <CardContent>
                 <Typography variant="h5" component="div">
                     {meeting.title}
+                    <IconButton
+                        aria-label="delete"
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                        onClick={() => deleteEmp(meeting._id)} // Adjusted to use meeting._id
+                    >
+                        <Icon path={isHovering ? mdiDeleteEmpty : mdiDelete} size={1} />
+                    </IconButton>
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {meeting.startTime.toLocaleString('en-US', {
@@ -37,9 +53,8 @@ const Meeting = ({ meeting }) => {
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     Location: {meeting.location}
                 </Typography>
-                <Stack direction="row" spacing={1}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {meeting.attendants.map((attendant, index) => (
-                        console.log("DEBUG: Meeting -> attendant ", attendant),
                         <Chip
                             key={index}
                             avatar={<Avatar style={{ backgroundColor: attendant.color }}>
@@ -47,7 +62,7 @@ const Meeting = ({ meeting }) => {
                             label={attendant.name}
                         />
                     ))}
-                </Stack>
+                </div>
             </CardContent>
         </Card>
     );

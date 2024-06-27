@@ -27,8 +27,6 @@ const MeetingProvider = ({ children }) => {
     console.log("DEBUG: Adding meeting: ", meetingData)
     try {
       const response = await axios.post(`${BASE_URL}/meetings/addMeeting`, meetingData);
-      console.log("DEBUG: Response from addMeeting: ", response.data.message);
-      console.log("DEBUG: Response from addMeeting: ", response.data.newMeeting);
       if (response.status === 200)
         fetchMeetings();
     } catch (error) {
@@ -36,11 +34,16 @@ const MeetingProvider = ({ children }) => {
     }
   };
 
-  const deleteMeeting = (meeting) => {
-    const updatedList = meetingList.filter(
-      (item) => item.title !== meeting.title
-    );
-    setMeetingList(updatedList);
+  const deleteMeeting = (meeting_id) => {
+    console.log("DEBUG: Deleting meeting: ", meeting_id);
+    try {
+      const response = axios.delete(`${BASE_URL}/meetings/delete/${meeting_id}`);
+      console.log("DEBUG: Response from deleteMeeting: ", response.status);
+      if (response.status === 200)
+        fetchMeetings();
+    } catch (error) {
+      console.error('Error deleting meeting:', error.response ? error.response.data.message : error.message);
+    }
   };
 
   return (
