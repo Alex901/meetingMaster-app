@@ -6,7 +6,6 @@ import { useEmployeeContext } from '/contexts/EmployeeContext';
 
 const AddEmployeeModal = ({ open, handleClose }) => {
     const [employeeName, setEmployeeName] = useState('');
-    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const { addEmployee } = useEmployeeContext();
 
     const handleChange = (event) => {
@@ -54,7 +53,6 @@ const AddEmployeeModal = ({ open, handleClose }) => {
                     value={employeeName}
                     onChange={handleChange}
                     fullWidth
-                    required
                     margin="normal"
                 />
                 <div style={{ textAlign: 'center', marginTop: '20px' }}>
@@ -62,7 +60,6 @@ const AddEmployeeModal = ({ open, handleClose }) => {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={isSubmitDisabled}
                     >
                         Submit
                     </Button>

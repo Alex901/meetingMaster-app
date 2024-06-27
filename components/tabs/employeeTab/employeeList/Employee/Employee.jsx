@@ -128,8 +128,8 @@ const Employee = ({ _id, name, color, busy }) => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: 'white' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: 'auto', justifyContent: 'space-evenly' }}>
-                <Avatar style={{ backgroundColor: color }}>{getInitials(name)}</Avatar>
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                <Avatar style={{ backgroundColor: color, marginLeft:'20px' }}>{getInitials(name)}</Avatar>
                 <div style={{ flexGrow: 1 }}>
                     <TextField
                         variant="outlined"
@@ -174,8 +174,8 @@ const Employee = ({ _id, name, color, busy }) => {
                 <Stack direction="row" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: '5px 5px' }}>
                     <Chip label="BUSY TODAY" color="primary" sx={{ minWidth: '100px' }} />
                     {todaysBusyTimes.map((time, index) => (
-                        <div key={index} style={{ width: 'calc(25%)' }}>
-                            <Chip label={time} sx={{ minWidth: '110px' }} />
+                        <div key={index} style={{ width: 'calc(20%)' }}>
+                            <Chip label={time} sx={{ minWidth: '110px', color:'white', background:'red' }} />
                         </div>
                     ))}
                 </Stack>
