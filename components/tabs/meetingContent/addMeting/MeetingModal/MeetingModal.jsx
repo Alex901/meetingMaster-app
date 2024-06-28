@@ -51,20 +51,20 @@ const MeetingModal = ({ open, handleClose }) => {
           startOfWorkingHours.setHours(9, 0, 0); // Working hours start at 9:00
           const endOfWorkingHours = new Date(time);
           endOfWorkingHours.setHours(17, 0, 0); // Working hours end at 17:00
-        
+
           // Check if the time slot is within working hours considering the meeting duration
           const withinWorkingHours = time >= startOfWorkingHours && endOfMeeting <= endOfWorkingHours;
 
           // Check if the time slot is within the date range and working hours
           if (withinWorkingHours && endOfMeeting <= endTime && selectedEmployees.every(employee => {
             return employee.busy.every(busyTime => {
-              const employeeStart = new Date(busyTime.start); 
-              const employeeEnd = new Date(busyTime.end); 
+              const employeeStart = new Date(busyTime.start);
+              const employeeEnd = new Date(busyTime.end);
               // It is a valid time if no employee is busy during that time, else
               return !(time < employeeEnd && endOfMeeting > employeeStart);
             });
           })) {
-            recommendations.push(new Date(time)); 
+            recommendations.push(new Date(time));
           }
         }
         return recommendations;
@@ -321,7 +321,7 @@ const MeetingModal = ({ open, handleClose }) => {
                   {formatDayLabel(new Date(day))}
                 </span>
               </div>
-              <div style={{ flexGrow: 1 }}> 
+              <div style={{ flexGrow: 1 }}>
                 <Stack direction="row" spacing={1}>
                   {times.map((time, timeIndex) => (
                     <Chip
@@ -330,6 +330,15 @@ const MeetingModal = ({ open, handleClose }) => {
                       onClick={() => handleTimeSelect(time)}
                       color={selectedTime === time ? "primary" : "default"}
                       clickable
+                      sx={{
+                        color: 'white',
+                        background: selectedTime === time ? 'linear-gradient(145deg, #1976d2, #1565c0)' : 'linear-gradient(145deg, #66bb6a, #43a047)', 
+                        boxShadow: '0px 4px 6px rgba(0,0,0,0.2), inset 0px -4px 6px rgba(0,0,0,0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        '&:hover': {
+                          background: selectedTime === time ? 'linear-gradient(145deg, #388E3C, #4CAF50)' : 'linear-gradient(145deg, #43a047, #66bb6a)', 
+                        }
+                      }}
                     />
                   ))}
                 </Stack>

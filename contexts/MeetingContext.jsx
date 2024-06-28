@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { useEmployeeContext } from '/contexts/EmployeeContext';
 
 const MeetingContext = createContext();
 
@@ -7,6 +8,8 @@ const MeetingContext = createContext();
 
 const MeetingProvider = ({ children }) => {
   const BASE_URL = 'http://localhost:5000';
+  const { fetchEmployees } = useEmployeeContext();
+
   const [meetingList, setMeetingList] = useState([]);
 
   useEffect(() => {
@@ -29,6 +32,7 @@ const MeetingProvider = ({ children }) => {
       const response = await axios.post(`${BASE_URL}/meetings/addMeeting`, meetingData);
       if (response.status === 200)
         fetchMeetings();
+        fetchEmployees();
     } catch (error) {
       console.error('Error adding meeting:', error.response ? error.response.data.message : error.message);
     }
@@ -41,6 +45,7 @@ const MeetingProvider = ({ children }) => {
       console.log("DEBUG: Response from deleteMeeting: ", response.status);
       if (response.status === 200)
         fetchMeetings();
+        fetchEmployees();
     } catch (error) {
       console.error('Error deleting meeting:', error.response ? error.response.data.message : error.message);
     }

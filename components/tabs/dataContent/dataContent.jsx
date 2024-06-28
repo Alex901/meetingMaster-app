@@ -1,23 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 
 const DataContent = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
+
+
+
   const handleFileSelect = (event) => {
-    // Process the selected file here
-    console.log(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    } else {
+      setSelectedFile(null);
+    }
+
+    console.log("Debug, selected file: ", selectedFile);
   };
 
   // Function to handle data upload
   const handleUpload = () => {
-    // Upload data logic here
+
     console.log('Upload data');
   };
 
-  // Function to handle data download
-  const handleDownload = () => {
-    // Download data logic here
-    console.log('Download data');
-  };
 
   return (
     <div style={{ backgroundColor: 'white', padding: '20px' }}>
@@ -36,7 +41,17 @@ const DataContent = () => {
             Select File
           </Button>
         </label>
-        <Button variant="outlined" onClick={handleUpload} style={{ marginLeft: '10px' }}>
+        <Button
+          variant="contained"
+          onClick={handleUpload}
+          disabled={!selectedFile}
+          sx={{ marginLeft: '10px',
+            borderRadius: '5px',
+            backgroundColor: 'green',
+            '&:hover': {
+              backgroundColor: 'darkgreen', 
+            }
+           }}>
           Upload Data
         </Button>
       </div>

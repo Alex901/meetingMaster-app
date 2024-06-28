@@ -143,14 +143,13 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                         onClick={() => onNameChange(_id, currentName)}
                         disabled={currentName === name || currentName === ''}
                         sx={{
-                            minWidth: '40px', // Overrides the minimum width to make the button square
-                            height: '40px', // Sets the button height to match the TextField
-                            width: '80px', // Makes the button square
+                            minWidth: '40px',
+                            height: '40px',
                             ml: .2,
-                            borderRadius: '10%',
-                            backgroundColor: currentName === name || currentName === '' ? 'grey' : 'green',
+                            borderRadius: '5px',
+                            backgroundColor: 'green',
                             '&:hover': {
-                                backgroundColor: currentName === name || currentName === '' ? 'darkgrey' : 'darkgreen', // Change hover color here
+                                backgroundColor: 'darkgreen',
                             }
                         }}
                     >
@@ -174,15 +173,20 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                     </IconButton>
                 </div>
             </div>
-            <div style={{ display:'flex',  width: '80%', padding:'5px' }}>
+            <div style={{ display: 'flex', width: '80%', padding: '5px' }}>
                 <Stack direction="row" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: '5px 0px' }}>
                     <Chip label="BUSY TODAY" color="primary" sx={{ minWidth: '110px' }} />
                     {todaysBusyTimes.map((time, index) => (
                         <div key={index} style={{ width: '110px' }}>
                             <Chip label={time}
-                                sx={{
+                                 sx={{
                                     color: 'white',
-                                    background: 'red'
+                                    background: 'linear-gradient(145deg, #ff5555, #cc0000)', // Metallic gradient effect
+                                    boxShadow: '0px 4px 6px rgba(0,0,0,0.2), inset 0px -4px 6px rgba(0,0,0,0.1)', // Outer and inner shadow for depth
+                                    border: '1px solid rgba(255, 255, 255, 0.2)', // Slight border for enhanced 3D effect
+                                    '&:hover': {
+                                        background: 'linear-gradient(145deg, #ee4444, #bb0000)', // Slightly lighter gradient on hover for interactive effect
+                                    }
                                 }}
                             />
                         </div>
