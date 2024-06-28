@@ -2,7 +2,6 @@ import React from 'react';
 import Button from '@mui/material/Button';
 
 const DataContent = () => {
-  // Function to handle file selection
   const handleFileSelect = (event) => {
     // Process the selected file here
     console.log(event.target.files[0]);
@@ -41,11 +40,7 @@ const DataContent = () => {
           Upload Data
         </Button>
       </div>
-      <div>
-        <Button variant="outlined" onClick={handleDownload}>
-          Download Data
-        </Button>
-      </div>
+
     </div>
   );
 };

@@ -28,7 +28,7 @@ function MeetingMaster() {
         >
             <Card sx={{ backgroundColor: '#ffffff', padding: '7px', height: 'auto' }}>
                 <CardContent>
-                    <Tabs centered
+                    <Tabs 
                         value={selectedTab}
                         onChange={handleChange}
                         sx={{

@@ -119,7 +119,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
     };
 
     const onNameChange = (_id, newName) => {
-            renameEmployee(_id, newName); //TODO: Confirmation dialog
+        renameEmployee(_id, newName); //TODO: Confirmation dialog
     }
 
 
@@ -129,7 +129,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: 'white' }}>
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <Avatar style={{ backgroundColor: color, marginLeft:'20px' }}>{getInitials(name)}</Avatar>
+                <Avatar style={{ backgroundColor: color, marginLeft: '20px' }}>{getInitials(name)}</Avatar>
                 <div style={{ flexGrow: 1 }}>
                     <TextField
                         variant="outlined"
@@ -145,12 +145,16 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                         sx={{
                             minWidth: '40px', // Overrides the minimum width to make the button square
                             height: '40px', // Sets the button height to match the TextField
-                            width: '40px', // Makes the button square
+                            width: '80px', // Makes the button square
                             ml: .2,
-                            borderRadius: '20%',
+                            borderRadius: '10%',
+                            backgroundColor: currentName === name || currentName === '' ? 'grey' : 'green',
+                            '&:hover': {
+                                backgroundColor: currentName === name || currentName === '' ? 'darkgrey' : 'darkgreen', // Change hover color here
+                            }
                         }}
                     >
-                        OK
+                        Rename
                     </Button>
                 </div>
                 <div>
@@ -170,12 +174,17 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                     </IconButton>
                 </div>
             </div>
-            <div style={{ width: '100%' }}> {/* Added marginTop here */}
-                <Stack direction="row" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: '5px 5px' }}>
-                    <Chip label="BUSY TODAY" color="primary" sx={{ minWidth: '100px' }} />
+            <div style={{ display:'flex',  width: '80%', padding:'5px' }}>
+                <Stack direction="row" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: '5px 0px' }}>
+                    <Chip label="BUSY TODAY" color="primary" sx={{ minWidth: '110px' }} />
                     {todaysBusyTimes.map((time, index) => (
-                        <div key={index} style={{ width: 'calc(23%)' }}>
-                            <Chip label={time} sx={{ minWidth: '110px', color:'white', background:'red' }} />
+                        <div key={index} style={{ width: '110px' }}>
+                            <Chip label={time}
+                                sx={{
+                                    color: 'white',
+                                    background: 'red'
+                                }}
+                            />
                         </div>
                     ))}
                 </Stack>
