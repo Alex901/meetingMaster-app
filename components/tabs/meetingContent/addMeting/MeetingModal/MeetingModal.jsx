@@ -42,8 +42,8 @@ const MeetingModal = ({ open, handleClose }) => {
         const durationMinutes = parseInt(duration, 10);
         let recommendations = [];
 
-        // Generate all possible start times within the range, at 0, 15, 30, 45 of each hour
-        for (let time = new Date(startTime); time <= endTime; time.setMinutes(time.getMinutes() + 15)) {
+        // Generate all possible start times within the range, at 0, and 30 each hour
+        for (let time = new Date(startTime); time <= endTime; time.setMinutes(time.getMinutes() + 30)) {
           const endOfMeeting = new Date(time);
           endOfMeeting.setMinutes(endOfMeeting.getMinutes() + durationMinutes);
 
