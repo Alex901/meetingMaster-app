@@ -19,11 +19,12 @@ const Meeting = ({ meeting }) => {
         return `${hours} hour(s) and ${minutes} minute(s)`;
     }
 
-    const deleteEmp = (_id) => {
+    const handleDeleteMeeting = (_id) => {
         deleteMeeting(_id);
     }
 
     return (
+        //Testing some MUI components instead of HTML elements, seems to work :shrug:
         <Card sx={{ marginBottom: 1, width:'500px' }}>
             <CardContent>
                 <Typography variant="h5" component="div">
@@ -32,7 +33,7 @@ const Meeting = ({ meeting }) => {
                         aria-label="delete"
                         onMouseEnter={() => setIsHovering(true)}
                         onMouseLeave={() => setIsHovering(false)}
-                        onClick={() => deleteEmp(meeting._id)} // Adjusted to use meeting._id
+                        onClick={() => handleDeleteMeeting(meeting._id)} // Adjusted to use meeting._id
                     >
                         <Icon path={isHovering ? mdiDeleteEmpty : mdiDelete} size={1} />
                     </IconButton>

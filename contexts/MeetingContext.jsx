@@ -9,7 +9,6 @@ const MeetingContext = createContext();
 const MeetingProvider = ({ children }) => {
   const BASE_URL = 'http://localhost:5000';
   const { fetchEmployees } = useEmployeeContext();
-
   const [meetingList, setMeetingList] = useState([]);
 
   useEffect(() => {
@@ -19,7 +18,6 @@ const MeetingProvider = ({ children }) => {
   const fetchMeetings = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/meetings/getMeetings`);
-      console.log("DEBUG: Fetching meetings: ", response.data.meetings);
       setMeetingList(response.data.meetings);
     } catch (error) {
       console.error('Failed to fetch meetings:', error);
@@ -31,21 +29,21 @@ const MeetingProvider = ({ children }) => {
     try {
       const response = await axios.post(`${BASE_URL}/meetings/addMeeting`, meetingData);
       if (response.status === 200)
-        fetchMeetings();
-        fetchEmployees();
+        fetchMeetings(); 
+      fetchEmployees(); //Some employees have update time schedules now
     } catch (error) {
       console.error('Error adding meeting:', error.response ? error.response.data.message : error.message);
     }
   };
 
-  const deleteMeeting = (meeting_id) => {
+  const deleteMeeting = async (meeting_id) => {
     console.log("DEBUG: Deleting meeting: ", meeting_id);
     try {
-      const response = axios.delete(`${BASE_URL}/meetings/delete/${meeting_id}`);
-      console.log("DEBUG: Response from deleteMeeting: ", response.status);
-      if (response.status === 200)
-        fetchMeetings();
-        fetchEmployees();
+      const response = await axios.delete(`${BASE_URL}/meetings/delete/${meeting_id}`);
+      if (response.status === 200) {
+      fetchMeetings(); 
+      fetchEmployees(); //Some employees have update time schedules now
+      }
     } catch (error) {
       console.error('Error deleting meeting:', error.response ? error.response.data.message : error.message);
     }

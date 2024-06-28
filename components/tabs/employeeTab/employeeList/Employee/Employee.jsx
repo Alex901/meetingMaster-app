@@ -19,7 +19,6 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
     };
 
     const deleteEmp = (_id) => {
-        console.log('Deleting employee:', _id, name);
         deleteEmployee(_id);
     };
 
@@ -35,7 +34,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
 
         // A helper function to generate a random time block within business hours
         const generateTimeBlock = (date) => {
-            // Calculate a random start hour within the constraints that allow for a max 2-hour duration
+            // Calculate a random start hour within the constraints of business hours and max duration
             const startHour = Math.floor(Math.random() * (businessEndHour - maxDurationHours - businessStartHour + 1)) + businessStartHour;
             // Determine the end hour, ensuring the block lasts between 1 to 2 hours
             const endHour = startHour + Math.floor(Math.random() * maxDurationHours) + 1;
@@ -47,13 +46,13 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
         };
 
         // Loop over the next 3 days to generate busy blocks for each day
-        for (let dayOffset = 0; dayOffset < 3; dayOffset++) {
+        for (let dayOffset = 0; dayOffset < 3; dayOffset++) { //Change this to change the number of days
             // Create a new date object for the current day in the loop
             const date = new Date();
             // Adjust the date to the correct day based on the loop's offset
             date.setDate(date.getDate() + dayOffset);
             // Randomly determine the number of busy blocks for the day (between 1 and 6)
-            const numBlocksToday = Math.floor(Math.random() * 4) + 1;
+            const numBlocksToday = Math.floor(Math.random() * 4) + 1; //Change this to change the number of blocks per day, you can set it to constant too
 
             // Initialize an array to hold the day's busy blocks
             let dayBlocks = [];

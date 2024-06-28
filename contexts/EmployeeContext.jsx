@@ -33,13 +33,13 @@ const EmployeeProvider = ({ children }) => {
         }
     }
 
-    const deleteEmployee = async (id_) => {
-        console.log('Deleting employee:', id_);
+    const deleteEmployee = async (_id) => {
+        console.log('Deleting employee:', _id);
         try {
-            const response = await axios.delete(`${BASE_URL}/employees/delete/${id_}`);
+            const response = await axios.delete(`${BASE_URL}/employees/delete/${_id}`);
             if (response.status === 200) {
                 // Filter out the deleted employee from the local state
-                const updatedList = employeeList.filter((emp) => emp._id !== id_);
+                const updatedList = employeeList.filter((emp) => emp._id !== _id);
                 setEmployeeList(updatedList);
                 fetchEmployees();
             }
@@ -80,7 +80,8 @@ const EmployeeProvider = ({ children }) => {
 
 
     return (
-        <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee, letsGetBusy, renameEmployee, fetchEmployees }}>
+        <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee, letsGetBusy, renameEmployee, 
+        fetchEmployees, setEmployeeList }}>
             {children}
         </EmployeeContext.Provider>
     );

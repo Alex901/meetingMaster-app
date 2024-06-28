@@ -15,6 +15,7 @@ function MeetingMaster() {
     };
 
     return (
+        // Box component to center the Card component and to easier fix the alignment
         <Box
             display="flex"
             justifyContent="center"
