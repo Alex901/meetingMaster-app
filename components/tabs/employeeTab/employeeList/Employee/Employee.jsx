@@ -5,12 +5,12 @@ import { useEmployeeContext } from '/contexts/EmployeeContext';
 import { Icon } from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 
-const Employee = ({ _id, name, color, busy }) => {
+const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to EmployeeData, this is not nice to read
     const [isHovering, setIsHovering] = useState(false);
-    const { deleteEmployee, letsGetBusy } = useEmployeeContext();
+    const { deleteEmployee, letsGetBusy, renameEmployee } = useEmployeeContext();
     const [currentName, setCurrentName] = useState(name);
 
-    useEffect(() => {
+    useEffect(() => { //This is not optimal, but it works for now
         setCurrentName(name);
     }, [name]);
 
@@ -118,8 +118,8 @@ const Employee = ({ _id, name, color, busy }) => {
         setCurrentName(event.target.value);
     };
 
-    const onNameChange = () => {
-        console.log('Name changed');
+    const onNameChange = (_id, newName) => {
+            renameEmployee(_id, newName); //TODO: Confirmation dialog
     }
 
 
@@ -140,7 +140,7 @@ const Employee = ({ _id, name, color, busy }) => {
                     <Button
                         variant="contained"
                         size="small"
-                        onClick={onNameChange}
+                        onClick={() => onNameChange(_id, currentName)}
                         disabled={currentName === name || currentName === ''}
                         sx={{
                             minWidth: '40px', // Overrides the minimum width to make the button square
@@ -174,7 +174,7 @@ const Employee = ({ _id, name, color, busy }) => {
                 <Stack direction="row" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: '5px 5px' }}>
                     <Chip label="BUSY TODAY" color="primary" sx={{ minWidth: '100px' }} />
                     {todaysBusyTimes.map((time, index) => (
-                        <div key={index} style={{ width: 'calc(20%)' }}>
+                        <div key={index} style={{ width: 'calc(23%)' }}>
                             <Chip label={time} sx={{ minWidth: '110px', color:'white', background:'red' }} />
                         </div>
                     ))}

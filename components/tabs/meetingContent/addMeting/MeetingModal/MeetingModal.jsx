@@ -64,7 +64,6 @@ const MeetingModal = ({ open, handleClose }) => {
               return !(time < employeeEnd && endOfMeeting > employeeStart);
             });
           })) {
-            console.log("DEBUG: current time ", time)
             recommendations.push(new Date(time)); 
           }
         }
@@ -100,13 +99,11 @@ const MeetingModal = ({ open, handleClose }) => {
   };
 
   const handleEmployeeSelection = (event) => {
-    console.log(event.target.value);
     const value = event.target.value;
     setSelectedEmployees((current) => (current === value ? null : value));
-
-    console.log(selectedEmployees);
   };
 
+  //TODO: Make this prettier
   const handlesSubmit = (event) => {
     event.preventDefault();
 
@@ -118,8 +115,6 @@ const MeetingModal = ({ open, handleClose }) => {
       location: location,
       attendants: selectedEmployees,
     };
-
-    console.log(newMeetingData);
 
     addMeeting(newMeetingData);
     resetMeetingData();
@@ -147,7 +142,6 @@ const MeetingModal = ({ open, handleClose }) => {
 
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
-    console.log('Selected date:', time);
   };
 
   const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });

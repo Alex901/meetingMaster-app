@@ -11,7 +11,6 @@ const AddEmployeeModal = ({ open, handleClose }) => {
     const handleChange = (event) => {
         const newName = event.target.value;
         setEmployeeName(newName);
-        setIsSubmitDisabled(newName === '')
         console.log(typeof handleClose);
     };
 

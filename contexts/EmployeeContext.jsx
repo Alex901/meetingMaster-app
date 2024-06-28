@@ -64,9 +64,23 @@ const EmployeeProvider = ({ children }) => {
         }
     };
 
+    const renameEmployee = async (_id, newName) => {
+        console.log('Changing name:', _id, newName);
+        try {
+            const response = await axios.put(`${BASE_URL}/employees/${_id}/rename`, {
+                newName,
+            });
+            if (response.status === 200) {
+                fetchEmployees();
+            }
+        } catch (error) {
+            console.error('Error renaming employee:', error.response ? error.response.data : error.message);
+        }
+    }
+
 
     return (
-        <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee, letsGetBusy }}>
+        <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee, letsGetBusy, renameEmployee }}>
             {children}
         </EmployeeContext.Provider>
     );
