@@ -19,16 +19,26 @@ function MeetingMaster() {
             display="flex"
             justifyContent="center"
             alignItems="top"
-            position="fixed" 
-            top="50px" 
+            position="fixed"
+            top="50px"
             height="auto"
             maxHeight={window.innerHeight - 100}
             width="100vw"
-           
+
         >
-            <Card sx={{ backgroundColor: '#ffffff', padding: '7px', height: 'auto' }}>
+            <Card
+                sx={{
+                    backgroundColor: '#f5f5f5', // Slightly off-white for contrast
+                    padding: '7px',
+                    height: 'auto',
+                    boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Soft shadow for depth
+                    '&:hover': {
+                        boxShadow: '0px 6px 24px rgba(0, 0, 0, 0.15)' // Slightly more pronounced shadow on hover
+                    }
+                }}
+            >
                 <CardContent>
-                    <Tabs 
+                    <Tabs
                         value={selectedTab}
                         onChange={handleChange}
                         sx={{

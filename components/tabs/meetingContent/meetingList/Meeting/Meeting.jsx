@@ -24,7 +24,7 @@ const Meeting = ({ meeting }) => {
     }
 
     return (
-        <Card sx={{ marginBottom: 2, maxWidth: '600px' }}>
+        <Card sx={{ marginBottom: 1, width:'500px' }}>
             <CardContent>
                 <Typography variant="h5" component="div">
                     {meeting.title}

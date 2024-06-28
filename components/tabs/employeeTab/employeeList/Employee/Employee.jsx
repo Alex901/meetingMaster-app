@@ -127,8 +127,9 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
     const todaysBusyTimes = getTodaysBusyTimes();
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: 'white' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: 'white', width:'500px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '30px' }}>
+                <div style={{display:'flex', gap:'16px'}}> 
                 <Avatar style={{ backgroundColor: color, marginLeft: '20px' }}>{getInitials(name)}</Avatar>
                 <div style={{ flexGrow: 1 }}>
                     <TextField
@@ -155,6 +156,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                     >
                         Rename
                     </Button>
+                    </div>
                 </div>
                 <div>
                     <IconButton
@@ -173,7 +175,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                     </IconButton>
                 </div>
             </div>
-            <div style={{ display: 'flex', width: '80%', padding: '5px' }}>
+            <div style={{ display: 'flex', width: '100%', padding: '5px' }}>
                 <Stack direction="row" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: '5px 0px' }}>
                     <Chip label="BUSY TODAY" color="primary" sx={{ minWidth: '110px' }} />
                     {todaysBusyTimes.map((time, index) => (
@@ -181,11 +183,11 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                             <Chip label={time}
                                  sx={{
                                     color: 'white',
-                                    background: 'linear-gradient(145deg, #ff5555, #cc0000)', // Metallic gradient effect
-                                    boxShadow: '0px 4px 6px rgba(0,0,0,0.2), inset 0px -4px 6px rgba(0,0,0,0.1)', // Outer and inner shadow for depth
-                                    border: '1px solid rgba(255, 255, 255, 0.2)', // Slight border for enhanced 3D effect
+                                    background: 'linear-gradient(145deg, #ff5555, #cc0000)', 
+                                    boxShadow: '0px 4px 6px rgba(0,0,0,0.2), inset 0px -4px 6px rgba(0,0,0,0.1)', 
+                                    border: '1px solid rgba(255, 255, 255, 0.2)', 
                                     '&:hover': {
-                                        background: 'linear-gradient(145deg, #ee4444, #bb0000)', // Slightly lighter gradient on hover for interactive effect
+                                        background: 'linear-gradient(145deg, #ee4444, #bb0000)', 
                                     }
                                 }}
                             />
