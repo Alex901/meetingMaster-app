@@ -47,7 +47,13 @@ const MeetingModal = ({ open, handleClose }) => {
           const endOfMeeting = new Date(time);
           endOfMeeting.setMinutes(endOfMeeting.getMinutes() + durationMinutes);
 
-          const withinWorkingHours = time.getHours() >= 9 && endOfMeeting.getHours() < 17 || (endOfMeeting.getHours() === 17 && endOfMeeting.getMinutes() === 0);
+          const startOfWorkingHours = new Date(time);
+          startOfWorkingHours.setHours(9, 0, 0); // Working hours start at 9:00
+          const endOfWorkingHours = new Date(time);
+          endOfWorkingHours.setHours(17, 0, 0); // Working hours end at 17:00
+        
+          // Check if the time slot is within working hours considering the meeting duration
+          const withinWorkingHours = time >= startOfWorkingHours && endOfMeeting <= endOfWorkingHours;
 
           // Check if the time slot is within the date range and working hours
           if (withinWorkingHours && endOfMeeting <= endTime && selectedEmployees.every(employee => {
@@ -58,7 +64,8 @@ const MeetingModal = ({ open, handleClose }) => {
               return !(time < employeeEnd && endOfMeeting > employeeStart);
             });
           })) {
-            recommendations.push(new Date(time)); // Clone the date to avoid mutation
+            console.log("DEBUG: current time ", time)
+            recommendations.push(new Date(time)); 
           }
         }
         return recommendations;
@@ -181,7 +188,7 @@ const MeetingModal = ({ open, handleClose }) => {
     setSelectedEmployees([]);
   };
 
-  const groupedRecommendations = groupByDay(timeRecommendations.recommendations || []);
+  const groupedRecommendations = groupByDay(timeRecommendations.recommendations);
 
   const validEarliestDate = new Date(earliestDate).getTime() ? new Date(earliestDate) : new Date();
 
