@@ -1,34 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Chip } from '@mui/material';
+import { useDataContext } from '/contexts/DataContext';
 
 const DataContent = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-
-  useEffect(() => {
-    console.log("Debug, selected file: ", selectedFile);
-  }
-    , [selectedFile]);
-
+  const { uploadFile } = useDataContext();
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
-      console.log("Debug, selected file: ", selectedFile);
     } else {
       setSelectedFile(null);
     }
-
-    console.log("Debug, selected file: ", selectedFile);
   };
 
-  const handleDelete = () => {
+  const handleRemoveFile = () => {
     setSelectedFile(null);
   };
 
   // Function to handle data upload
   const handleUpload = () => {
-
+    uploadFile(selectedFile);
     console.log('Upload data');
   };
 
@@ -69,7 +62,7 @@ const DataContent = () => {
         {selectedFile && (
           <Chip
             label={selectedFile.name}
-            onDelete={() => handleDelete()}
+            onDelete={() => handleRemoveFile()}
             variant="outlined"
           />
         )}
