@@ -8,12 +8,14 @@ import { DataProvider } from '../contexts/DataContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <DataProvider>
+
     <EmployeeProvider>
-     <MeetingProvider>
-       <App />
-     </MeetingProvider>
+      <DataProvider>
+        <MeetingProvider>
+          <App />
+        </MeetingProvider>
+      </DataProvider>
     </EmployeeProvider>
-    </DataProvider>
+
   </React.StrictMode>,
 )

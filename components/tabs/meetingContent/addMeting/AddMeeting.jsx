@@ -10,7 +10,7 @@ const AddMeeting = () => {
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-            <Button variant="outlined" style={{ marginTop: '20px' }} onClick={handleOpen}>New Meeting</Button>
+            <Button variant="outlined" style={{ margin: '20px' }} onClick={handleOpen}>New Meeting</Button>
             <MeetingModal open={openModal} handleClose={handleClose} />
         </div>
     );

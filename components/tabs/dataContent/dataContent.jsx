@@ -8,10 +8,11 @@ const DataContent = () => {
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
-    if (file) {
+    if (file && file.name.endsWith('.txt')) {
       setSelectedFile(file);
     } else {
       setSelectedFile(null);
+      alert('Please select a .txt file.');
     }
   };
 
