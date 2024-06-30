@@ -20,7 +20,15 @@ const Meeting = ({ meeting }) => {
     function formatDuration(duration) {
         const hours = Math.floor(duration / 60);
         const minutes = duration % 60;
-        return `${hours} hour(s) and ${minutes} minute(s)`;
+        if (hours === 0 && minutes === 0) {
+            return `0 minute(s)`;
+        } else if (hours === 0) {
+            return `${minutes} minute(s)`;
+        } else if (minutes === 0) {
+            return `${hours} hour(s)`;
+        } else {
+            return `${hours} hour(s) and ${minutes} minute(s)`;
+        }
     }
 
     const handleDeleteConfirm = () => {
@@ -33,9 +41,20 @@ const Meeting = ({ meeting }) => {
         setShowConfirmDialog(true);
     };
 
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const hour = date.getHours();
+        const minute = date.getMinutes();
+
+        const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')} - ${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        return formattedDate;
+    };
+
     return (
         //Testing some MUI components instead of HTML elements, seems to work :shrug:
-        <Card sx={{ marginBottom: 1, width:'500px' }}>
+        <Card sx={{ marginBottom: 1, width: '500px' }}>
             <CardContent>
                 <Typography variant="h5" component="div">
                     {meeting.title}
@@ -43,26 +62,19 @@ const Meeting = ({ meeting }) => {
                         aria-label="delete"
                         onMouseEnter={() => setIsHovering(true)}
                         onMouseLeave={() => setIsHovering(false)}
-                        onClick={() => handleOpenConfirmDialog(meeting._id)} 
+                        onClick={() => handleOpenConfirmDialog(meeting._id)}
                     >
                         <Icon path={isHovering ? mdiDeleteEmpty : mdiDelete} size={1} />
                     </IconButton>
                     <ConfirmDeleteDialog
-                            isOpen={showConfirmDialog}
-                            onCancel={() => setShowConfirmDialog(false)}
-                            content={`Are you sure you want to remove this meeting: ${selectedMeetingId}?`}
-                            onConfirm={handleDeleteConfirm}
-                        />
+                        isOpen={showConfirmDialog}
+                        onCancel={() => setShowConfirmDialog(false)}
+                        content={`Are you sure you want to remove this meeting: ${selectedMeetingId}?`}
+                        onConfirm={handleDeleteConfirm}
+                    />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {meeting.startTime.toLocaleString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                    })} | {formatDuration(meeting.duration)}
+                    {formatDate(new Date(meeting.startTime))} | {formatDuration(meeting.duration)}
                 </Typography>
                 <Typography variant="body2">
                     {meeting.description}
