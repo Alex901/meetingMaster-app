@@ -13,7 +13,7 @@ const MeetingList = () => {
                         <Meeting key={index} meeting={meeting} /> //TODO: I know, I know, I should have used the meeting id as the key, but I don't have one yet..
                     ))
                 ) : (
-                    <p>No meetings today.</p>
+                    <p>No meetings to display.</p>
                 )}
             </div>
         </div>

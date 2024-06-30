@@ -5,6 +5,7 @@ import { useEmployeeContext } from '/contexts/EmployeeContext';
 import { Icon } from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 import ConfirmDeleteDialog from '/components/Dialogs/ConfirmDeleteDialog';
+import { toast } from 'react-toastify';
 
 
 const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to EmployeeData, this is not nice to read
@@ -23,31 +24,50 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
         return name.split(' ').map((n) => n[0]).join('');
     };
 
-    const deleteEmp = (_id) => {
-        deleteEmployee(_id);
-    };
-
     const handleDeleteConfirm = () => {
         deleteEmployee(selectedEmployeeId);
     };
 
-//Handle the opening of the confirm dialog, the name is a little redundant but it is fast :)
+//Handle the opening of the confirm dialog, the name is a little redundant but... :)
     const handleOpenConfirmDialog = (_id, name) => {
         setSelectedEmployeeId(_id);
         setSelectedEmployeeName(name);
         setShowConfirmDialog(true);
     };
 
+    //Method to check if employee is busy today, to avoid spammage
+    const isEmployeeBusyToday = (busy) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize today's date to start of the day for comparison
+    
+        // Check each busy entry to see if it starts today
+        for (let entry of busy) {
+            const entryStartDate = new Date(entry.start);
+            entryStartDate.setHours(0, 0, 0, 0); // Normalize entry's start date to start of the day for comparison
+    
+            if (entryStartDate.getTime() === today.getTime()) {
+                console.log("Employee is busy today:", entry);
+                return true; // Found an entry that starts today
+            }
+        }
+        return false;
+    };
+
     {/* Method to generate some random times where said employee is 
-         busy, mostly for testing*/ }
-    const addBusyTime = (_id) => {
+         busy */ }
+    const addBusyTime = (_id, busy) => {
         const busyTimes = [];
         const businessStartHour = 9;
         const businessEndHour = 17;
         const maxDurationHours = 2;
         let attemptCounter = 0;
         const maxAttempts = 100;
-        const days = 5; //Change this to change the number of days
+        const days = 5; //Change this to change the number of days employee is busy
+
+        if ( isEmployeeBusyToday(busy) ) {
+            toast.warning('Employee is already busy today');
+            return;
+        }
 
         // A helper function to generate a random time block within business hours
         const generateTimeBlock = (date) => {
@@ -195,7 +215,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
 
 
                     <IconButton aria-label="add"
-                        onClick={() => addBusyTime(_id)}
+                        onClick={() => addBusyTime(_id, busy)}
                     >
                         <EventBusyIcon />
                     </IconButton>
