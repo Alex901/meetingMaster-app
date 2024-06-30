@@ -180,6 +180,9 @@ const MeetingModal = ({ open, handleClose }) => {
     setDuration('');
     setLocation('');
     setSelectedEmployees([]);
+    setEarliestDate('');
+    setLatestDate('');
+    setTimeRecommendations({ recommendations: [], message: 'Enter the meeting details for recommended start times' });
   };
 
   const groupedRecommendations = groupByDay(timeRecommendations.recommendations);

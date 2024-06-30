@@ -1,13 +1,16 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useEmployeeContext } from '/contexts/EmployeeContext';
+import { toast } from 'react-toastify';
 
 const MeetingContext = createContext();
 
 
 
 const MeetingProvider = ({ children }) => {
-  const BASE_URL = 'http://localhost:5000';
+  const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true'
+    ? 'https://todo-backend-gkdo.onrender.com'
+    : 'http://localhost:5000';
   const { fetchEmployees } = useEmployeeContext();
   const [meetingList, setMeetingList] = useState([]);
 
@@ -28,9 +31,13 @@ const MeetingProvider = ({ children }) => {
     console.log("DEBUG: Adding meeting: ", meetingData)
     try {
       const response = await axios.post(`${BASE_URL}/meetings/addMeeting`, meetingData);
-      if (response.status === 200)
-        fetchMeetings(); 
-      fetchEmployees(); //Some employees have update time schedules now
+      if (response.status === 200) {
+        fetchMeetings();
+        toast.success('Meeting added successfully!');
+        fetchEmployees(); //Some employees have update time schedules now
+      } else {
+        toast.error('Failed to add meeting!');
+      }
     } catch (error) {
       console.error('Error adding meeting:', error.response ? error.response.data.message : error.message);
     }
@@ -41,8 +48,11 @@ const MeetingProvider = ({ children }) => {
     try {
       const response = await axios.delete(`${BASE_URL}/meetings/delete/${meeting_id}`);
       if (response.status === 200) {
-      fetchMeetings(); 
-      fetchEmployees(); //Some employees have update time schedules now
+        fetchMeetings();
+        fetchEmployees(); //Some employees have update time schedules now
+        toast.success('Meeting deleted successfully!');
+      } else {
+        toast.error('Failed to delete meeting!');
       }
     } catch (error) {
       console.error('Error deleting meeting:', error.response ? error.response.data.message : error.message);

@@ -1,10 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const EmployeeContext = createContext();
 
+
+
 const EmployeeProvider = ({ children }) => {
-    const BASE_URL = 'http://localhost:5000';
+    const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true'
+        ? 'https://todo-backend-gkdo.onrender.com'
+        : 'http://localhost:5000';
     const [employeeList, setEmployeeList] = useState([]);
 
     useEffect(() => {
@@ -24,10 +29,13 @@ const EmployeeProvider = ({ children }) => {
         //console.log('Adding employee:', employeeData);
         try {
             const response = await axios.post(`${BASE_URL}/employees/addEmployee`, employeeData);
-
-            console.log(response.data.message);
-
-            setEmployeeList([...employeeList, response.data.newEmployee]);
+            console.log('Response:', response);
+            if (response.status === 200) {
+                setEmployeeList([...employeeList, response.data.newEmployee]);
+                toast.success('Employee added successfully!');
+            } else {
+                toast.error('Failed to add employee!');
+            }
         } catch (error) {
             console.error('Error adding employee:', error.response ? error.response.data.message : error.message);
         }
@@ -42,6 +50,9 @@ const EmployeeProvider = ({ children }) => {
                 const updatedList = employeeList.filter((emp) => emp._id !== _id);
                 setEmployeeList(updatedList);
                 fetchEmployees();
+                toast.success('Employee deleted successfully!');
+            } else {
+                toast.error('Failed to delete employee!');
             }
         } catch (error) {
             console.error('Error deleting employee:', error.response ? error.response.data.message : error.message);
@@ -54,8 +65,12 @@ const EmployeeProvider = ({ children }) => {
             const response = await axios.post(`${BASE_URL}/employees/${_id}/set-busy`, {
                 busyTimes,
             });
-            if (response.status === 200){
+            if (response.status === 200) {
                 fetchEmployees();
+                const employeeName = employeeList.find(emp => emp._id === _id)?.name;
+                toast.success(`${employeeName} is now busier than before`);
+            } else {
+                toast.error('Failed to add busy times!');
             }
 
             console.log('Successfully added busy times:', response.data);
@@ -72,6 +87,9 @@ const EmployeeProvider = ({ children }) => {
             });
             if (response.status === 200) {
                 fetchEmployees();
+                toast.success('Employee renamed successfully!');
+            } else {
+                toast.error('Failed to rename employee!');
             }
         } catch (error) {
             console.error('Error renaming employee:', error.response ? error.response.data : error.message);
@@ -80,8 +98,10 @@ const EmployeeProvider = ({ children }) => {
 
 
     return (
-        <EmployeeContext.Provider value={{ employeeList, addEmployee, deleteEmployee, letsGetBusy, renameEmployee, 
-        fetchEmployees, setEmployeeList }}>
+        <EmployeeContext.Provider value={{
+            employeeList, addEmployee, deleteEmployee, letsGetBusy, renameEmployee,
+            fetchEmployees, setEmployeeList
+        }}>
             {children}
         </EmployeeContext.Provider>
     );

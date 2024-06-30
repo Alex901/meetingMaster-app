@@ -23,7 +23,7 @@ const DataContent = () => {
   // Function to handle data upload
   const handleUpload = () => {
     uploadFile(selectedFile);
-    console.log('Upload data');
+    setSelectedFile(null);
   };
 
 

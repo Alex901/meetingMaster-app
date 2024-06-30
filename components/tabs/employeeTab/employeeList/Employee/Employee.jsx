@@ -4,11 +4,16 @@ import EventBusyIcon from '@mui/icons-material/EventBusy';
 import { useEmployeeContext } from '/contexts/EmployeeContext';
 import { Icon } from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
+import ConfirmDeleteDialog from '/components/Dialogs/ConfirmDeleteDialog';
+
 
 const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to EmployeeData, this is not nice to read
     const [isHovering, setIsHovering] = useState(false);
     const { deleteEmployee, letsGetBusy, renameEmployee } = useEmployeeContext();
     const [currentName, setCurrentName] = useState(name);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+    const [selectedEmployeeName, setSelectedEmployeeName] = useState(null);
 
     useEffect(() => { //This is not optimal, but it works for now
         setCurrentName(name);
@@ -22,8 +27,19 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
         deleteEmployee(_id);
     };
 
+    const handleDeleteConfirm = () => {
+        deleteEmployee(selectedEmployeeId);
+    };
+
+
+    const handleOpenConfirmDialog = (_id, name) => {
+        setSelectedEmployeeId(_id);
+        setSelectedEmployeeName(name);
+        setShowConfirmDialog(true);
+    };
+
     {/* Method to generate some random times where said employee is 
-         busy*/ }
+         busy, mostly for testing*/ }
     const addBusyTime = (_id) => {
         const busyTimes = [];
         const businessStartHour = 9;
@@ -31,6 +47,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
         const maxDurationHours = 2;
         let attemptCounter = 0;
         const maxAttempts = 100;
+        const days = 5; //Change this to change the number of days
 
         // A helper function to generate a random time block within business hours
         const generateTimeBlock = (date) => {
@@ -46,7 +63,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
         };
 
         // Loop over the next 3 days to generate busy blocks for each day
-        for (let dayOffset = 0; dayOffset < 3; dayOffset++) { //Change this to change the number of days
+        for (let dayOffset = 0; dayOffset < days; dayOffset++) {
             // Create a new date object for the current day in the loop
             const date = new Date();
             // Adjust the date to the correct day based on the loop's offset
@@ -126,35 +143,35 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
     const todaysBusyTimes = getTodaysBusyTimes();
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: 'white', width:'500px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '5px', margin: '5px', border: '1px solid black', borderRadius: '10px', backgroundColor: 'white', width: '500px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '30px' }}>
-                <div style={{display:'flex', gap:'16px'}}> 
-                <Avatar style={{ backgroundColor: color, marginLeft: '20px' }}>{getInitials(name)}</Avatar>
-                <div style={{ flexGrow: 1 }}>
-                    <TextField
-                        variant="outlined"
-                        defaultValue={currentName}
-                        size="small"
-                        onChange={handleNameChange}
-                    />
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => onNameChange(_id, currentName)}
-                        disabled={currentName === name || currentName === ''}
-                        sx={{
-                            minWidth: '40px',
-                            height: '40px',
-                            ml: .2,
-                            borderRadius: '5px',
-                            backgroundColor: 'green',
-                            '&:hover': {
-                                backgroundColor: 'darkgreen',
-                            }
-                        }}
-                    >
-                        Rename
-                    </Button>
+                <div style={{ display: 'flex', gap: '16px' }}>
+                    <Avatar style={{ backgroundColor: color, marginLeft: '20px' }}>{getInitials(name)}</Avatar>
+                    <div style={{ flexGrow: 1 }}>
+                        <TextField
+                            variant="outlined"
+                            defaultValue={currentName}
+                            size="small"
+                            onChange={handleNameChange}
+                        />
+                        <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => onNameChange(_id, currentName)}
+                            disabled={currentName === name || currentName === ''}
+                            sx={{
+                                minWidth: '40px',
+                                height: '40px',
+                                ml: .2,
+                                borderRadius: '5px',
+                                backgroundColor: 'green',
+                                '&:hover': {
+                                    backgroundColor: 'darkgreen',
+                                }
+                            }}
+                        >
+                            Rename
+                        </Button>
                     </div>
                 </div>
                 <div>
@@ -162,11 +179,22 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                         aria-label="delete"
                         onMouseEnter={() => setIsHovering(true)}
                         onMouseLeave={() => setIsHovering(false)}
-                        onClick={() => deleteEmp(_id)}
+                        onClick={() => handleOpenConfirmDialog(_id, name)}
 
                     >
                         <Icon path={isHovering ? mdiDeleteEmpty : mdiDelete} size={1} />
                     </IconButton>
+                    {showConfirmDialog && (
+                        <ConfirmDeleteDialog
+                            isOpen={showConfirmDialog}
+                            onCancel={() => setShowConfirmDialog(false)}
+                            content={`Are you sure you want to remove ${selectedEmployeeName}?`}
+                            onConfirm={handleDeleteConfirm}
+                            employeeId={selectedEmployeeId}
+                        />
+                    )}
+
+
                     <IconButton aria-label="add"
                         onClick={() => addBusyTime(_id)}
                     >
@@ -180,13 +208,13 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                     {todaysBusyTimes.map((time, index) => (
                         <div key={index} style={{ width: '110px' }}>
                             <Chip label={time}
-                                 sx={{
+                                sx={{
                                     color: 'white',
-                                    background: 'linear-gradient(145deg, #ff5555, #cc0000)', 
-                                    boxShadow: '0px 4px 6px rgba(0,0,0,0.2), inset 0px -4px 6px rgba(0,0,0,0.1)', 
-                                    border: '1px solid rgba(255, 255, 255, 0.2)', 
+                                    background: 'linear-gradient(145deg, #ff5555, #cc0000)',
+                                    boxShadow: '0px 4px 6px rgba(0,0,0,0.2), inset 0px -4px 6px rgba(0,0,0,0.1)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)',
                                     '&:hover': {
-                                        background: 'linear-gradient(145deg, #ee4444, #bb0000)', 
+                                        background: 'linear-gradient(145deg, #ee4444, #bb0000)',
                                     }
                                 }}
                             />
@@ -195,7 +223,9 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                 </Stack>
             </div>
         </div>
+
     );
+
 };
 
 export default Employee;
