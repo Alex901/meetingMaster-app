@@ -4,7 +4,7 @@
 Meeting Master is a light weight tool for keeping track of when employees are busy, and 
 additionally for finding times for meetings where all attending employees are free.
 
-## Backend
+### Backend
 There is a separate backend project for this app(https://github.com/Alex901/meetingMaster-backend.git), but as of now that project is hosted on Render and the app is setup to run with a live server. 
 
 
@@ -70,11 +70,13 @@ you can select a .txt file, hit upload data. And if it is a valid
 file, it will be uploaded to the server and its data parsed into 
 the application. 
 
+---
+
 And that is about it,
 Enjoy
 
 
 
-**Contact**
+###Contact###
 Alexander Winberg – alexander.winberg.036@gmail.com
 Project Link: https://github.com/Alex901/meetingMaster-app.git
