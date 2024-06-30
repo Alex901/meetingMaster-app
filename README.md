@@ -64,7 +64,7 @@ more cohesive. But feel free to fill them out.
 A list of all the upcoming meetings, where you can see details 
 about them, including all employees attending the meeting.
 
-### Data
+### Data ###
 This is a simple tab for uploading legacy data. In all simplicity
 you can select a .txt file, hit upload data. And if it is a valid
 file, it will be uploaded to the server and its data parsed into 
@@ -77,6 +77,6 @@ Enjoy
 
 
 
-###Contact###
+### Contact ###
 Alexander Winberg – alexander.winberg.036@gmail.com
 Project Link: https://github.com/Alex901/meetingMaster-app.git
