@@ -3,10 +3,14 @@ import { useMeetingContext } from "/contexts/MeetingContext";
 import { Card, CardContent, Typography, Chip, Avatar, IconButton } from '@mui/material';
 import { Icon } from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
+import ConfirmDeleteDialog from '../../../../Dialogs/ConfirmDeleteDialog';
 
 const Meeting = ({ meeting }) => {
     const [isHovering, setIsHovering] = useState(false);
     const { deleteMeeting } = useMeetingContext();
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+
 
     // Function to extract initials from a name
     const getInitials = (name) => {
@@ -19,9 +23,15 @@ const Meeting = ({ meeting }) => {
         return `${hours} hour(s) and ${minutes} minute(s)`;
     }
 
-    const handleDeleteMeeting = (_id) => {
-        deleteMeeting(_id);
-    }
+    const handleDeleteConfirm = () => {
+        console.log('DEBUG: Deleting meeting with id:', selectedMeetingId);
+        deleteMeeting(selectedMeetingId);
+    };
+
+    const handleOpenConfirmDialog = (meetingId) => {
+        setSelectedMeetingId(meetingId);
+        setShowConfirmDialog(true);
+    };
 
     return (
         //Testing some MUI components instead of HTML elements, seems to work :shrug:
@@ -33,10 +43,16 @@ const Meeting = ({ meeting }) => {
                         aria-label="delete"
                         onMouseEnter={() => setIsHovering(true)}
                         onMouseLeave={() => setIsHovering(false)}
-                        onClick={() => handleDeleteMeeting(meeting._id)} // Adjusted to use meeting._id
+                        onClick={() => handleOpenConfirmDialog(meeting._id)} 
                     >
                         <Icon path={isHovering ? mdiDeleteEmpty : mdiDelete} size={1} />
                     </IconButton>
+                    <ConfirmDeleteDialog
+                            isOpen={showConfirmDialog}
+                            onCancel={() => setShowConfirmDialog(false)}
+                            content={`Are you sure you want to remove this meeting: ${selectedMeetingId}?`}
+                            onConfirm={handleDeleteConfirm}
+                        />
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {meeting.startTime.toLocaleString('en-US', {

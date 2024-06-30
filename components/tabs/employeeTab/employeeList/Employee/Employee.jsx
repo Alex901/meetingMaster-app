@@ -31,7 +31,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
         deleteEmployee(selectedEmployeeId);
     };
 
-
+//Handle the opening of the confirm dialog, the name is a little redundant but it is fast :)
     const handleOpenConfirmDialog = (_id, name) => {
         setSelectedEmployeeId(_id);
         setSelectedEmployeeName(name);
@@ -190,7 +190,6 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
                             onCancel={() => setShowConfirmDialog(false)}
                             content={`Are you sure you want to remove ${selectedEmployeeName}?`}
                             onConfirm={handleDeleteConfirm}
-                            employeeId={selectedEmployeeId}
                         />
                     )}
 
@@ -204,7 +203,7 @@ const Employee = ({ _id, name, color, busy }) => { //TODO: Change the props to E
             </div>
             <div style={{ display: 'flex', width: '100%', padding: '5px' }}>
                 <Stack direction="row" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: '5px 0px' }}>
-                    <Chip label="BUSY TODAY" color="primary" sx={{ minWidth: '110px' }} />
+                    <Chip label="TODAY" color="primary" sx={{ minWidth: '110px' }} />
                     {todaysBusyTimes.map((time, index) => (
                         <div key={index} style={{ width: '110px' }}>
                             <Chip label={time}

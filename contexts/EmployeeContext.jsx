@@ -32,7 +32,7 @@ const EmployeeProvider = ({ children }) => {
             console.log('Response:', response);
             if (response.status === 200) {
                 setEmployeeList([...employeeList, response.data.newEmployee]);
-                toast.success('Employee added successfully!');
+                toast.success('Employee successfully added!');
             } else {
                 toast.error('Failed to add employee!');
             }
@@ -50,7 +50,7 @@ const EmployeeProvider = ({ children }) => {
                 const updatedList = employeeList.filter((emp) => emp._id !== _id);
                 setEmployeeList(updatedList);
                 fetchEmployees();
-                toast.success('Employee deleted successfully!');
+                toast.success('Employee successfully deleted!');
             } else {
                 toast.error('Failed to delete employee!');
             }

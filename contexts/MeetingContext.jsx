@@ -33,7 +33,7 @@ const MeetingProvider = ({ children }) => {
       const response = await axios.post(`${BASE_URL}/meetings/addMeeting`, meetingData);
       if (response.status === 200) {
         fetchMeetings();
-        toast.success('Meeting added successfully!');
+        toast.success('Meeting successfully added!');
         fetchEmployees(); //Some employees have update time schedules now
       } else {
         toast.error('Failed to add meeting!');
@@ -44,13 +44,12 @@ const MeetingProvider = ({ children }) => {
   };
 
   const deleteMeeting = async (meeting_id) => {
-    console.log("DEBUG: Deleting meeting: ", meeting_id);
     try {
       const response = await axios.delete(`${BASE_URL}/meetings/delete/${meeting_id}`);
       if (response.status === 200) {
         fetchMeetings();
         fetchEmployees(); //Some employees have update time schedules now
-        toast.success('Meeting deleted successfully!');
+        toast.success('Meeting successfully deleted!');
       } else {
         toast.error('Failed to delete meeting!');
       }
