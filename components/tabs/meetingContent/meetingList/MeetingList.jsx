@@ -6,7 +6,7 @@ const MeetingList = () => {
 
     return (
         <div style={{ textAlign: 'left' }}>
-            <h2 style={{ marginLeft: '10px' }}>TODAY</h2>
+            <h2 style={{ marginLeft: '10px' }}>Upcoming Meetings</h2>
             <div style={{ overflow: 'auto', maxHeight: '600px', width: '100%', padding: '5px', backgroundColor: '#F0F0F0', borderRadius:'10px' }}>
                 {meetingList && meetingList.length > 0 ? ( // To ensure that meetingList has been initiated before i map it
                     meetingList.map((meeting, index) => (
