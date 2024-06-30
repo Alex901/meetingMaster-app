@@ -1,7 +1,6 @@
 # Meeting Master
 
 ## Description
-
 Meeting Master is a light weight tool for keeping track of when employees are busy, and 
 additionally for finding times for meetings where all attending employees are free.
 
