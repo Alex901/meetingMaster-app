@@ -13,7 +13,7 @@ const DataProvider = ({ children }) => {
 
     const uploadFile = async (file) => {
         const formData = new FormData();
-        formData.append('file', file); // 'file' is the key, and the second parameter is the file itself
+        formData.append('file', file); 
 
         try {
             toast.info("Uploading data...");

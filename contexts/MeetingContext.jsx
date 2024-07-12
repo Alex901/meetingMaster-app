@@ -34,7 +34,7 @@ const MeetingProvider = ({ children }) => {
       if (response.status === 200) {
         fetchMeetings();
         toast.success('Meeting successfully added!');
-        fetchEmployees(); //Some employees have update time schedules now
+        fetchEmployees(); //Some employees have update time schedules now, that is why I fetch employees too
       } else {
         toast.error('Failed to add meeting!');
       }
@@ -48,7 +48,7 @@ const MeetingProvider = ({ children }) => {
       const response = await axios.delete(`${BASE_URL}/meetings/delete/${meeting_id}`);
       if (response.status === 200) {
         fetchMeetings();
-        fetchEmployees(); //Some employees have update time schedules now
+        fetchEmployees(); //Some employees have update time schedules now, that is why I fetch employees too
         toast.success('Meeting successfully deleted!');
       } else {
         toast.error('Failed to delete meeting!');
